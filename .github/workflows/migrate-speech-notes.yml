@@ -1,0 +1,116 @@
+name: One-time Speech Notes migration
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/migrate-speech-notes.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: migrate-speech-notes-once
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout target monorepo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Fetch immutable legacy source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_REPO='https://github.com/xX2Angelo8Xx/Drone-Fieldtest.git'
+          SOURCE_SHA='f280ba1e6fa8d50ab4af863642c2eaf9a3dec231'
+          rm -rf /tmp/speech-notes-source
+          git clone --no-checkout --filter=blob:none "$SOURCE_REPO" /tmp/speech-notes-source
+          git -C /tmp/speech-notes-source checkout --detach "$SOURCE_SHA"
+          test "$(git -C /tmp/speech-notes-source rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Extract Speech Notes only
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC=/tmp/speech-notes-source
+          rm -rf apps/speech-notes tooling/speech-notes
+          mkdir -p apps/speech-notes/android
+          mkdir -p tooling/speech-notes/patches tooling/speech-notes/signing tooling/speech-notes/reference
+
+          cp -a "$SRC/SpeechNotes/." apps/speech-notes/android/
+
+          for patch in \
+            patch_speechnotes_whisper_timings.py \
+            patch_speechnotes_benchmark_tab.py \
+            patch_speechnotes_v150_runtime.py \
+            patch_speechnotes_v170_cpu_lab.py \
+            patch_speechnotes_v180_kleidiai_backend.py \
+            patch_speechnotes_v180_encoder_lab.py \
+            patch_speechnotes_v182_diagnostics.py \
+            patch_speechnotes_v183_trigger_lab.py \
+            patch_speechnotes_v184_recording_fix.py \
+            patch_speechnotes_v185_runtime_session.py \
+            patch_speechnotes_v190_streaming.py \
+            patch_speechnotes_v200_diarization.py; do
+            test -f "$SRC/.github/$patch"
+            cp "$SRC/.github/$patch" tooling/speech-notes/patches/
+          done
+
+          cp "$SRC/.github/speechnotes-progress.sh" tooling/speech-notes/speechnotes-progress.sh
+          cp "$SRC/.github/speechnotes-showcase.jks.b64" tooling/speech-notes/signing/showcase-release.jks.b64
+          cp "$SRC/.github/workflows/chatgpt-speechnotes.yml" tooling/speech-notes/reference/legacy-drone-workflow.yml
+
+          cat > apps/speech-notes/MIGRATION_NOTES.md <<'EOF'
+          # Speech Notes Migration Notes
+
+          Speech Notes was extracted from the historically misused `xX2Angelo8Xx/Drone-Fieldtest` repository.
+
+          Immutable migration source:
+          `f280ba1e6fa8d50ab4af863642c2eaf9a3dec231` (`Build Speech Notes v2.0 with max-3 speaker diarization`).
+
+          The source repository is migration input only. `Drone-Fieldtest/master` must never be modified by InChat application development.
+
+          The Android source is now owned by `apps/speech-notes/android`. The legacy CI patch chain is preserved under `tooling/speech-notes/patches` solely for migration parity and should be retired incrementally after a validated baseline exists.
+          EOF
+
+          # No repository-local build outputs or downloaded model binaries are migrated.
+          rm -rf apps/speech-notes/android/.gradle \
+                 apps/speech-notes/android/app/build \
+                 apps/speech-notes/android/app/.cxx \
+                 apps/speech-notes/android/app/src/main/cpp/whispercpp \
+                 apps/speech-notes/android/app/src/main/assets/models \
+                 apps/speech-notes/android/app/src/main/assets/speaker \
+                 apps/speech-notes/android/showcase-release.jks
+
+      - name: Verify extraction boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f apps/speech-notes/android/settings.gradle
+          test -f apps/speech-notes/android/app/src/main/AndroidManifest.xml
+          test -f apps/speech-notes/android/app/src/main/cpp/whisper_jni.cpp
+          test -f tooling/speech-notes/patches/patch_speechnotes_v200_diarization.py
+          test -f tooling/speech-notes/signing/showcase-release.jks.b64
+          if find . -maxdepth 2 -type f \( -name 'drone_start.sh' -o -name 'drone_aliases.sh' \) | grep -q .; then
+            echo 'Drone-specific files crossed the migration boundary.' >&2
+            exit 1
+          fi
+
+      - name: Commit migration snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/speech-notes tooling/speech-notes
+          git diff --cached --quiet && { echo 'Migration snapshot already present.'; exit 0; }
+          git commit -m 'Migrate Speech Notes from immutable Drone-Fieldtest snapshot'
+          git push origin HEAD:main
