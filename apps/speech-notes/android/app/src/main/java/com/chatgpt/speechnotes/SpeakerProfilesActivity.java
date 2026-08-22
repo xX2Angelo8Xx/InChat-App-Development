@@ -58,6 +58,10 @@ public final class SpeakerProfilesActivity extends Activity {
     }
 
     private void beginEnrollment() {
+        if (RecordingService.isRecording() || RecordingService.isTranscribing()) {
+            Toast.makeText(this, "Sprecherprofile können nicht während einer laufenden Aufnahme erstellt werden.", Toast.LENGTH_LONG).show();
+            return;
+        }
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQ_AUDIO); return;
         }
