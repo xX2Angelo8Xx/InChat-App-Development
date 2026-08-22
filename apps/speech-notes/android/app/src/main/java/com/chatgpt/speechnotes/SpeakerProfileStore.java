@@ -18,7 +18,7 @@ public final class SpeakerProfileStore {
     private final File file;
 
     public SpeakerProfileStore(Context context) {
-        File dir = new File(context.getFilesDir(), "speaker-profiles");
+        File dir = new File(context.getNoBackupFilesDir(), "speaker-profiles");
         if (!dir.exists()) dir.mkdirs();
         file = new File(dir, "profiles-v1.json");
     }
@@ -53,7 +53,6 @@ public final class SpeakerProfileStore {
         for (float[] e : filtered) sim += SpeakerProfile.cosine(centroid, e);
         float consistency = sim / filtered.size();
 
-        // Keep a bounded diverse prototype set in addition to the centroid.
         ArrayList<float[]> prototypes = new ArrayList<>();
         int step = Math.max(1, filtered.size() / 10);
         for (int i = 0; i < filtered.size() && prototypes.size() < 12; i += step) prototypes.add(filtered.get(i));
