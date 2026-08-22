@@ -52,6 +52,6 @@ public final class SpeakerProfile {
         if (aa <= 1e-12 || bb <= 1e-12) return -1f; return (float) (dot / Math.sqrt(aa * bb));
     }
 
-    private static JSONArray vectorToJson(float[] v) { JSONArray a = new JSONArray(); for (float x : v) a.put((double) x); return a; }
+    private static JSONArray vectorToJson(float[] v) throws Exception { JSONArray a = new JSONArray(); for (float x : v) a.put((double) x); return a; }
     private static float[] vectorFromJson(JSONArray a) throws Exception { float[] v = new float[a.length()]; for (int i = 0; i < v.length; i++) v[i] = (float) a.getDouble(i); return v; }
 }
