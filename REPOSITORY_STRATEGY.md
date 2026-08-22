@@ -1,44 +1,167 @@
-# InChatAppDevelopment – Repository Strategy
+InChat App Development — Repository Strategy
 
-## Objective
-This repository is an application monorepo designed to host multiple independent products without cross-contamination.
+Canonical Repository
 
-## Target structure
+All active application development for this project belongs in:
 
-```text
+xX2Angelo8Xx/InChat-App-Development
+
+The repository is a multi-app monorepo.
+
+Target Structure
+
 InChat-App-Development/
-├── README.md
+├── AGENTS.md
 ├── PROJECT_INSTRUCTIONS.md
 ├── DEVELOPMENT_PLAYBOOK.md
 ├── REPOSITORY_STRATEGY.md
+├── docs/
+│   ├── CI_AND_RELEASE_POLICY.md
+│   └── MIGRATION_POLICY.md
 ├── apps/
 │   ├── speech-notes/
-│   └── <future-app>/
-├── shared/
+│   │   ├── README.md
+│   │   ├── ARCHITECTURE.md
+│   │   ├── BUILD_AND_RELEASE.md
+│   │   ├── PROJECT_HISTORY.md
+│   │   └── android/
+│   ├── digitmatrix/
+│   │   └── ...
+│   └── future-app/
 ├── tooling/
-└── .github/workflows/
-```
+│   ├── shared/
+│   └── <app-specific-tooling>/
+└── .github/
+    └── workflows/
 
-## Isolation rule
-The governing rule is:
+Isolation Principle
 
-> one application = one isolated project directory
+> One application = one isolated project directory and one independent build/test/release boundary.
 
-A repository may contain many applications, but every application must be independently buildable, testable and releasable. A change to one app should not trigger unrelated application builds unless an explicitly shared dependency changed.
 
-## CI strategy
-Application workflows use path filters. Shared tooling may trigger all affected consumers. Workflows must operate from a fresh checkout and may not depend on files in unrelated repositories.
 
-## Branching
-`main` is the default repository branch. Keep it releasable. Feature branches are recommended for changes with meaningful integration risk; small deterministic maintenance can be committed directly when explicitly authorized.
+An app may use shared tooling, but:
 
-## Historical Drone-Fieldtest boundary
-Speech Notes was originally bootstrapped inside `xX2Angelo8Xx/Drone-Fieldtest` on a dedicated app branch. This was a historical mistake and is not the long-term model.
+app A must not depend on private implementation details of app B;
 
-The immutable Speech Notes migration source is:
-`f280ba1e6fa8d50ab4af863642c2eaf9a3dec231`.
+release outputs must not be used as hidden build dependencies;
 
-`Drone-Fieldtest/master` is unrelated production code and must never be modified by InChat application development. The old app branch is retained only as historical evidence until migration parity is validated.
+shared source must live in an explicit shared module;
 
-## Signing and secrets
-Preserve Android signing identity whenever upgrade compatibility is required. Production signing material should ultimately live in repository-scoped secure CI storage. A migrated legacy key may remain temporarily only to establish binary/update parity and must be treated as technical debt.
+CI should be path-selective where practical.
+
+
+App Directory Naming
+
+Use stable, descriptive, lowercase kebab-case directory names:
+
+apps/speech-notes/
+apps/digitmatrix/
+apps/gesture-vision/
+
+Product-facing names may use different capitalization.
+
+CI Organization
+
+Prefer one workflow per independently releasable app:
+
+.github/workflows/speech-notes.yml
+.github/workflows/digitmatrix.yml
+
+Use path filters so changes to one app do not rebuild unrelated apps unless shared infrastructure changed.
+
+Shared tooling changes may intentionally trigger multiple workflows.
+
+Migration Sources
+
+Historical app code may exist in unrelated repositories.
+
+Current known historical source:
+
+xX2Angelo8Xx/Drone-Fieldtest
+
+Rules:
+
+migration sources are read-only;
+
+pin the exact source commit;
+
+extract only app-relevant source/configuration;
+
+do not import unrelated repository history/content;
+
+preserve signing identity when update compatibility is required;
+
+prove independent build/release parity before declaring migration complete.
+
+
+Drone-Fieldtest Safety Boundary
+
+Drone-Fieldtest/master must never be modified by this project.
+
+Known historical app branches may be inspected for migration, but are not active development targets.
+
+The existence of app branches in Drone-Fieldtest does not make that repository part of the new monorepo workflow.
+
+Source of Truth Transition
+
+An app becomes authoritative in InChat-App-Development only after:
+
+1. source migration is complete;
+
+
+2. CI works from a clean checkout;
+
+
+3. expected artifact is generated;
+
+
+4. release publication succeeds when applicable;
+
+
+5. signing/package identity is verified where applicable;
+
+
+6. device/update validation succeeds when required.
+
+
+
+Until then, clearly label the migration state.
+
+History Strategy
+
+Do not blindly transplant the full Git history of an unrelated repository.
+
+Prefer:
+
+recording the immutable source commit;
+
+preserving relevant historical documentation;
+
+preserving app-specific changelog/project history;
+
+starting clean monorepo history for the migrated app.
+
+
+Secrets and Signing
+
+Production signing material and secrets should use secure repository-scoped CI storage where supported.
+
+Do not casually duplicate secret material.
+
+When an Android app must update an existing installation:
+
+preserve applicationId;
+
+preserve compatible signing identity;
+
+increment versionCode;
+
+verify the update path on a physical device.
+
+
+Default Branch
+
+The default branch of InChat-App-Development may be used as the active integration branch when that is the established repository workflow.
+
+Before any destructive or history-rewriting operation, stop and obtain explicit user approval.
