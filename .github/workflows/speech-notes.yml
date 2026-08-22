@@ -72,13 +72,15 @@ jobs:
             patch_speechnotes_v190_streaming.py \
             patch_speechnotes_v200_diarization.py \
             patch_speechnotes_v201_migration_release.py \
-            patch_speechnotes_v210_speaker_identity.py; do
+            patch_speechnotes_v210_speaker_identity.py \
+            patch_speechnotes_v210_cluster_hardening.py; do
             python3 "tooling/speech-notes/patches/$patch"
           done
           grep -q "versionCode 22" SpeechNotes/app/build.gradle
           grep -q "versionName '2.1.0'" SpeechNotes/app/build.gradle
           grep -q "class SpeakerProfilesActivity" SpeechNotes/app/src/main/java/com/chatgpt/speechnotes/SpeakerProfilesActivity.java
           grep -q "maxSpeakers" SpeechNotes/app/src/main/java/com/chatgpt/speechnotes/SpeakerDiarizationEngine.java
+          grep -q "pendingSpeakerCandidateHits" SpeechNotes/app/src/main/java/com/chatgpt/speechnotes/SpeakerDiarizationEngine.java
           grep -q "speakerAtSample" SpeechNotes/app/src/main/java/com/chatgpt/speechnotes/SpeakerTranscriptFusion.java
 
       - name: Build host quantizer
