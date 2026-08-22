@@ -71,9 +71,15 @@ jobs:
             patch_speechnotes_v185_runtime_session.py \
             patch_speechnotes_v190_streaming.py \
             patch_speechnotes_v200_diarization.py \
-            patch_speechnotes_v201_migration_release.py; do
+            patch_speechnotes_v201_migration_release.py \
+            patch_speechnotes_v210_speaker_identity.py; do
             python3 "tooling/speech-notes/patches/$patch"
           done
+          grep -q "versionCode 22" SpeechNotes/app/build.gradle
+          grep -q "versionName '2.1.0'" SpeechNotes/app/build.gradle
+          grep -q "class SpeakerProfilesActivity" SpeechNotes/app/src/main/java/com/chatgpt/speechnotes/SpeakerProfilesActivity.java
+          grep -q "maxSpeakers" SpeechNotes/app/src/main/java/com/chatgpt/speechnotes/SpeakerDiarizationEngine.java
+          grep -q "speakerAtSample" SpeechNotes/app/src/main/java/com/chatgpt/speechnotes/SpeakerTranscriptFusion.java
 
       - name: Build host quantizer
         run: |
@@ -124,7 +130,7 @@ jobs:
           set -euo pipefail
           APK="$GITHUB_WORKSPACE/SpeechNotes/app/build/outputs/apk/release/app-release.apk"
           $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose "$APK"
-          $ANDROID_HOME/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "versionCode='21' versionName='2.0.1'"
+          $ANDROID_HOME/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "versionCode='22' versionName='2.1.0'"
           unzip -l "$APK" > /tmp/apk-files.txt
           grep -q 'libggml-cpu-android_armv9.0_1.so' /tmp/apk-files.txt
           grep -q 'libggml-cpu-android_armv9.0_1_kai.so' /tmp/apk-files.txt
@@ -132,22 +138,22 @@ jobs:
           grep -q 'assets/speaker/campplus_cn_en_common_200k.onnx' /tmp/apk-files.txt
           grep -q 'libonnxruntime.so' /tmp/apk-files.txt
           ! grep -q 'libggml-vulkan.so' /tmp/apk-files.txt
-          cp "$APK" "$GITHUB_WORKSPACE/SpeechNotes-2.0.1.apk"
-          test -s "$GITHUB_WORKSPACE/SpeechNotes-2.0.1.apk"
+          cp "$APK" "$GITHUB_WORKSPACE/SpeechNotes-2.1.0.apk"
+          test -s "$GITHUB_WORKSPACE/SpeechNotes-2.1.0.apk"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: SpeechNotes-v2.0.1-arm64
-          path: SpeechNotes-2.0.1.apk
+          name: SpeechNotes-v2.1.0-arm64
+          path: SpeechNotes-2.1.0.apk
           compression-level: 0
           retention-days: 14
 
-      - name: Publish update-test release
+      - name: Publish Speech Notes v2.1.0 release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG='speechnotes-v2.0.1'
+          TAG='speechnotes-v2.1.0'
           gh release delete "$TAG" --yes --cleanup-tag || true
-          gh release create "$TAG" SpeechNotes-2.0.1.apk#SpeechNotes-2.0.1.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.0.1' --notes 'First normal update-test build from InChat-App-Development. Same applicationId and signing identity as v2.0.0, with versionCode 21 / versionName 2.0.1 so Android can exercise the real in-place app update path. No intentional functional changes beyond the repository migration baseline.'
+          gh release create "$TAG" SpeechNotes-2.1.0.apk#SpeechNotes-2.1.0.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.1.0' --notes 'Speaker Identity & Diarization v2: local guided voice profiles, recognized speaker names, configurable 1-10 participant limit, sliding CAM++ speaker observations, temporal speaker smoothing and mid-Whisper-segment speaker-turn splitting. Same applicationId/signing identity for in-place update compatibility. Physical Galaxy A56 acoustic validation remains required.'
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,url,assets
