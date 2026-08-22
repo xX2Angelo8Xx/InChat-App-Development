@@ -1,2 +1,3 @@
 baseline=2026-08-22
-purpose=trigger first CI run after observer installation
+attempt=2
+purpose=retry after restoring legacy v1.8.1 patch dependency
