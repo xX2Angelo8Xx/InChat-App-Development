@@ -1,7 +1,79 @@
-run_id=32588898653
-head_sha=ad6412207e819f5daf1b6768f3f9db8f37b9a968
-conclusion=cancelled
-run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32588898653
-recorded_utc=2026-08-22T17:50:14Z
+run_id=32588923348
+head_sha=8934d8a2fc873589cdd534be927cfc106ee03370
+conclusion=failure
+run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32588923348
+recorded_utc=2026-08-22T17:56:24Z
 
 ===== FAILED LOG TAIL =====
+build	Build signed release APK	﻿2026-08-22T17:53:59.7875583Z ##[group]Run set -euo pipefail
+build	Build signed release APK	2026-08-22T17:53:59.7875982Z ^[[36;1mset -euo pipefail^[[0m
+build	Build signed release APK	2026-08-22T17:53:59.7876406Z ^[[36;1m(cd SpeechNotes && gradle --no-daemon :app:assembleRelease)^[[0m
+build	Build signed release APK	2026-08-22T17:53:59.7917090Z shell: /usr/bin/bash -e {0}
+build	Build signed release APK	2026-08-22T17:53:59.7917404Z env:
+build	Build signed release APK	2026-08-22T17:53:59.7917745Z   SPEECHNOTES_SOURCE_SHA: 8934d8a2fc873589cdd534be927cfc106ee03370
+build	Build signed release APK	2026-08-22T17:53:59.7918256Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Build signed release APK	2026-08-22T17:53:59.7918792Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Build signed release APK	2026-08-22T17:53:59.7919236Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build	Build signed release APK	2026-08-22T17:53:59.7919580Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build	Build signed release APK	2026-08-22T17:53:59.7919944Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
+build	Build signed release APK	2026-08-22T17:53:59.7920286Z   GRADLE_USER_HOME: /home/runner/.gradle
+build	Build signed release APK	2026-08-22T17:53:59.7920611Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
+build	Build signed release APK	2026-08-22T17:53:59.7921179Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
+build	Build signed release APK	2026-08-22T17:53:59.7921867Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+build	Build signed release APK	2026-08-22T17:53:59.7922392Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+build	Build signed release APK	2026-08-22T17:53:59.7922754Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
+build	Build signed release APK	2026-08-22T17:53:59.7923066Z ##[endgroup]
+build	Build signed release APK	2026-08-22T17:54:00.4601198Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+build	Build signed release APK	2026-08-22T17:54:01.7593752Z Daemon will be stopped at the end of the build 
+build	Build signed release APK	2026-08-22T17:54:12.1606632Z > Task :app:preBuild UP-TO-DATE
+build	Build signed release APK	2026-08-22T17:54:12.1615159Z > Task :app:preReleaseBuild UP-TO-DATE
+build	Build signed release APK	2026-08-22T17:54:12.3626083Z > Task :app:javaPreCompileRelease
+build	Build signed release APK	2026-08-22T17:54:12.7601104Z > Task :app:generateReleaseResValues
+build	Build signed release APK	2026-08-22T17:54:12.7639724Z > Task :app:checkReleaseAarMetadata
+build	Build signed release APK	2026-08-22T17:54:12.7652794Z > Task :app:mapReleaseSourceSetPaths
+build	Build signed release APK	2026-08-22T17:54:12.8617317Z > Task :app:generateReleaseResources
+build	Build signed release APK	2026-08-22T17:54:13.3589727Z > Task :app:packageReleaseResources
+build	Build signed release APK	2026-08-22T17:54:13.6587697Z > Task :app:mergeReleaseResources
+build	Build signed release APK	2026-08-22T17:54:14.3606526Z > Task :app:createReleaseCompatibleScreenManifests
+build	Build signed release APK	2026-08-22T17:54:14.3626583Z > Task :app:extractDeepLinksRelease
+build	Build signed release APK	2026-08-22T17:54:14.4621669Z > Task :app:parseReleaseLocalResources
+build	Build signed release APK	2026-08-22T17:54:14.5590922Z 
+build	Build signed release APK	2026-08-22T17:54:14.5601775Z > Task :app:processReleaseMainManifest
+build	Build signed release APK	2026-08-22T17:54:14.5603547Z /home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/src/main/AndroidManifest.xml:11:9-41 Warning:
+build	Build signed release APK	2026-08-22T17:54:14.5606596Z 	android:extractNativeLibs should not be specified in this source AndroidManifest.xml file. See https://d.android.com/guide/topics/manifest/application-element#extractNativeLibs for more information.
+build	Build signed release APK	2026-08-22T17:54:14.5609568Z The AGP Upgrade Assistant can remove the attribute from the AndroidManifest.xml file and update the build file accordingly. See https://d.android.com/studio/build/agp-upgrade-assistant for more information.
+build	Build signed release APK	2026-08-22T17:54:14.8599255Z 
+build	Build signed release APK	2026-08-22T17:54:14.8616876Z > Task :app:processReleaseManifest
+build	Build signed release APK	2026-08-22T17:54:14.9588811Z > Task :app:extractProguardFiles
+build	Build signed release APK	2026-08-22T17:54:16.8600026Z > Task :app:configureCMakeRelease[arm64-v8a]
+build	Build signed release APK	2026-08-22T17:54:44.8616465Z > Task :app:processReleaseManifestForPackage
+build	Build signed release APK	2026-08-22T17:54:46.8596316Z > Task :app:buildCMakeRelease[arm64-v8a]
+build	Build signed release APK	2026-08-22T17:56:05.7594104Z > Task :app:mergeReleaseJniLibFolders
+build	Build signed release APK	2026-08-22T17:56:06.3589850Z > Task :app:mergeReleaseNativeLibs
+build	Build signed release APK	2026-08-22T17:56:06.3590850Z > Task :app:processReleaseResources
+build	Build signed release APK	2026-08-22T17:56:06.3591694Z > Task :app:checkReleaseDuplicateClasses
+build	Build signed release APK	2026-08-22T17:56:09.1628143Z /home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/src/main/java/com/chatgpt/speechnotes/SpeakerProfile.java:55: error: unreported exception JSONException; must be caught or declared to be thrown
+build	Build signed release APK	2026-08-22T17:56:09.1631104Z 
+build	Build signed release APK	2026-08-22T17:56:09.1658302Z     private static JSONArray vectorToJson(float[] v) { JSONArray a = new JSONArray(); for (float x : v) a.put((double) x); return a; }
+build	Build signed release APK	2026-08-22T17:56:09.1659491Z > Task :app:compileReleaseJavaWithJavac
+build	Build signed release APK	2026-08-22T17:56:09.1666209Z                                                                                                              ^
+build	Build signed release APK	2026-08-22T17:56:09.4592910Z Note: Some input files use or override a deprecated API.
+build	Build signed release APK	2026-08-22T17:56:09.4593523Z 
+build	Build signed release APK	2026-08-22T17:56:09.4598092Z Note: Recompile with -Xlint:deprecation for details.
+build	Build signed release APK	2026-08-22T17:56:09.4598907Z > Task :app:compileReleaseJavaWithJavac FAILED
+build	Build signed release APK	2026-08-22T17:56:09.4600153Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_9-1787421244208.json
+build	Build signed release APK	2026-08-22T17:56:09.4601083Z 1 error
+build	Build signed release APK	2026-08-22T17:56:09.5590025Z 
+build	Build signed release APK	2026-08-22T17:56:09.5616703Z FAILURE: Build failed with an exception.
+build	Build signed release APK	2026-08-22T17:56:09.5618245Z 21 actionable tasks: 21 executed
+build	Build signed release APK	2026-08-22T17:56:09.5645639Z 
+build	Build signed release APK	2026-08-22T17:56:09.5656746Z * What went wrong:
+build	Build signed release APK	2026-08-22T17:56:09.5661696Z Execution failed for task ':app:compileReleaseJavaWithJavac'.
+build	Build signed release APK	2026-08-22T17:56:09.5662662Z > Compilation failed; see the compiler error output for details.
+build	Build signed release APK	2026-08-22T17:56:09.5663096Z 
+build	Build signed release APK	2026-08-22T17:56:09.5663387Z * Try:
+build	Build signed release APK	2026-08-22T17:56:09.5663876Z > Run with --info option to get more log output.
+build	Build signed release APK	2026-08-22T17:56:09.5664301Z > Run with --scan to get full insights.
+build	Build signed release APK	2026-08-22T17:56:09.5664638Z 
+build	Build signed release APK	2026-08-22T17:56:09.5664772Z BUILD FAILED in 2m 9s
+build	Build signed release APK	2026-08-22T17:56:09.7696286Z ##[error]Process completed with exit code 1.
