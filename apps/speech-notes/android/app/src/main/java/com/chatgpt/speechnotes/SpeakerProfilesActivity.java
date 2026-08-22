@@ -85,10 +85,16 @@ public final class SpeakerProfilesActivity extends Activity {
     private void recordAndEncode() {
         AudioRecord rec = null;
         try {
+            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                throw new SecurityException("Mikrofonberechtigung wurde während der Profilaufnahme entzogen");
+            }
             int min = AudioRecord.getMinBufferSize(SR, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
             rec = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION, SR, AudioFormat.CHANNEL_IN_MONO,
                     AudioFormat.ENCODING_PCM_16BIT, Math.max(min, SR * 2));
             if (rec.getState() != AudioRecord.STATE_INITIALIZED) throw new IllegalStateException("Mikrofon konnte nicht initialisiert werden");
+            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                throw new SecurityException("Mikrofonberechtigung wurde vor Aufnahmestart entzogen");
+            }
             short[] all = new short[SR * RECORD_SECONDS]; short[] buf = new short[2048]; int pos = 0; boolean page2 = false;
             rec.startRecording(); long start = SystemClock.elapsedRealtime(); int lastShown = -1;
             while (pos < all.length) {
