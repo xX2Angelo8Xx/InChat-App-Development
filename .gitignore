@@ -1,0 +1,23 @@
+# Android / Gradle
+.gradle/
+**/build/
+**/.cxx/
+local.properties
+*.iml
+.idea/
+
+# Native/generated dependencies and model assets
+**/app/src/main/cpp/whispercpp/
+**/app/src/main/assets/models/
+**/app/src/main/assets/speaker/
+
+# Signing output reconstructed by CI
+**/showcase-release.jks
+
+# Legacy parity symlink created only inside CI
+/SpeechNotes
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.swp
