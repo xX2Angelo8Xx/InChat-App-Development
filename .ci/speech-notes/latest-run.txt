@@ -1,7 +1,55 @@
-run_id=32585494450
-head_sha=9304991dbed92ca8ba240e07104d4b78b36ea224
-conclusion=cancelled
-run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32585494450
-recorded_utc=2026-08-22T16:42:52Z
+run_id=32585517836
+head_sha=4d85b5a1ee78a52dd5f3ae429a79a26b8f0e5c91
+conclusion=failure
+run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32585517836
+recorded_utc=2026-08-22T16:44:07Z
 
 ===== FAILED LOG TAIL =====
+build	Apply migration-parity patch chain	﻿2026-08-22T16:43:46.7078980Z ##[group]Run set -euo pipefail
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7079377Z ^[[36;1mset -euo pipefail^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7079692Z ^[[36;1mfor patch in \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7080013Z ^[[36;1m  patch_speechnotes_whisper_timings.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7080419Z ^[[36;1m  patch_speechnotes_benchmark_tab.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7080785Z ^[[36;1m  patch_speechnotes_v150_runtime.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7081136Z ^[[36;1m  patch_speechnotes_v170_cpu_lab.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7081502Z ^[[36;1m  patch_speechnotes_v180_kleidiai_backend.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7081903Z ^[[36;1m  patch_speechnotes_v180_encoder_lab.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7082274Z ^[[36;1m  patch_speechnotes_v182_diagnostics.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7082632Z ^[[36;1m  patch_speechnotes_v183_trigger_lab.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7082991Z ^[[36;1m  patch_speechnotes_v184_recording_fix.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7083376Z ^[[36;1m  patch_speechnotes_v185_runtime_session.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7083753Z ^[[36;1m  patch_speechnotes_v190_streaming.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7084161Z ^[[36;1m  patch_speechnotes_v200_diarization.py \^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7084574Z ^[[36;1m  patch_speechnotes_v201_migration_release.py; do^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7085020Z ^[[36;1m  python3 "tooling/speech-notes/patches/$patch"^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7085394Z ^[[36;1mdone^[[0m
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7125524Z shell: /usr/bin/bash -e {0}
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7125826Z env:
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7126177Z   SPEECHNOTES_SOURCE_SHA: 4d85b5a1ee78a52dd5f3ae429a79a26b8f0e5c91
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7126714Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7127477Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7128058Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7128413Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7128785Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7129125Z   GRADLE_USER_HOME: /home/runner/.gradle
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7129472Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7130012Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7130503Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7131017Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7131384Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7131699Z ##[endgroup]
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7515123Z Extended whisper.cpp timing API successfully
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.7781777Z Benchmark navigation patched into MainActivity.java
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.8055115Z Patched Speech Notes runtime: ARM Best default + Turbo 8-thread default
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.8349444Z Applied v1.7 ARM CPU performance lab patch
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.8612161Z Added isolated android_armv9.0_1_kai backend with target-scoped KleidiAI definition
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.8884100Z Applied v1.8 Q4_0 + isolated KleidiAI encoder lab
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.8884776Z Applied v1.8.1 Q4 thread/affinity/backend validation lab (18 controlled runs)
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.9148017Z Applied v1.8.2 runtime diagnostics lab + copyable benchmark export
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.9435306Z Applied v1.8.3 productive Q4/4T/ctx1280 default + trigger diagnostics suites
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.9702576Z Applied v1.8.4 recording crash diagnostics + centralized runtime pipeline fix
+build	Apply migration-parity patch chain	2026-08-22T16:43:46.9974051Z Applied v1.8.5 unified native runtime session + self-healing recording guards + safe receiver registration
+build	Apply migration-parity patch chain	2026-08-22T16:43:47.0241271Z Applied v1.9.0 integrated streaming core + overlap assembly + backlog telemetry + final flush + live UI
+build	Apply migration-parity patch chain	2026-08-22T16:43:47.0521801Z Applied v2.0.0 max-3 speaker diarization: timestamps + CAM++ embeddings + List<SpeakerCluster> + online tracking + global refinement + transcript fusion
+build	Apply migration-parity patch chain	2026-08-22T16:43:47.0778526Z Expected v2.0.0 version block not found after patch chain
+build	Apply migration-parity patch chain	2026-08-22T16:43:47.0825830Z ##[error]Process completed with exit code 1.
