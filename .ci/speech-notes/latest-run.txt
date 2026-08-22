@@ -1,57 +1,31 @@
-run_id=32584325067
-head_sha=2ba61a90206027100fbd96edec8f164fe0a4409c
+run_id=32584442584
+head_sha=6587d7e3fc1a1cdc07e2b9f919370c0c5e3467fc
 conclusion=failure
-run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32584325067
-recorded_utc=2026-08-22T16:20:16Z
+run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32584442584
+recorded_utc=2026-08-22T16:27:22Z
 
 ===== FAILED LOG TAIL =====
-build	Apply migration-parity patch chain	﻿2026-08-22T16:19:55.7183557Z ##[group]Run set -euo pipefail
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7183981Z ^[[36;1mset -euo pipefail^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7184256Z ^[[36;1mfor patch in \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7184567Z ^[[36;1m  patch_speechnotes_whisper_timings.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7184949Z ^[[36;1m  patch_speechnotes_benchmark_tab.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7185296Z ^[[36;1m  patch_speechnotes_v150_runtime.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7185638Z ^[[36;1m  patch_speechnotes_v170_cpu_lab.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7186001Z ^[[36;1m  patch_speechnotes_v180_kleidiai_backend.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7186377Z ^[[36;1m  patch_speechnotes_v180_encoder_lab.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7186754Z ^[[36;1m  patch_speechnotes_v182_diagnostics.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7187095Z ^[[36;1m  patch_speechnotes_v183_trigger_lab.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7187447Z ^[[36;1m  patch_speechnotes_v184_recording_fix.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7187826Z ^[[36;1m  patch_speechnotes_v185_runtime_session.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7188192Z ^[[36;1m  patch_speechnotes_v190_streaming.py \^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7188619Z ^[[36;1m  patch_speechnotes_v200_diarization.py; do^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7189024Z ^[[36;1m  python3 "tooling/speech-notes/patches/$patch"^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7189361Z ^[[36;1mdone^[[0m
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7231950Z shell: /usr/bin/bash -e {0}
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7232250Z env:
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7232589Z   SPEECHNOTES_SOURCE_SHA: 2ba61a90206027100fbd96edec8f164fe0a4409c
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7233106Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7233621Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7234060Z   ANDROID_HOME: /usr/local/lib/android/sdk
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7234395Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7234747Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7235076Z   GRADLE_USER_HOME: /home/runner/.gradle
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7235400Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7235734Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7236195Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7236737Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7237095Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7237387Z ##[endgroup]
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7566080Z Extended whisper.cpp timing API successfully
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.7833633Z Benchmark navigation patched into MainActivity.java
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.8108245Z Patched Speech Notes runtime: ARM Best default + Turbo 8-thread default
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.8408151Z Applied v1.7 ARM CPU performance lab patch
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.8668866Z Added isolated android_armv9.0_1_kai backend with target-scoped KleidiAI definition
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.8933395Z Applied v1.8 Q4_0 + isolated KleidiAI encoder lab
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9656684Z Traceback (most recent call last):
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9658282Z   File "/home/runner/work/InChat-App-Development/InChat-App-Development/tooling/speech-notes/patches/patch_speechnotes_v180_encoder_lab.py", line 144, in <module>
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9659387Z     exec(Path('.github/patch_speechnotes_v181_validation_lab.py').read_text())
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9659976Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9660594Z   File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9662073Z     with self.open(mode='r', encoding=encoding, errors=errors) as f:
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9662825Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9663667Z   File "/usr/lib/python3.12/pathlib.py", line 1015, in open
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9664474Z     return io.open(self, mode, buffering, encoding, errors, newline)
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9665234Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9665918Z FileNotFoundError: [Errno 2] No such file or directory: '.github/patch_speechnotes_v181_validation_lab.py'
-build	Apply migration-parity patch chain	2026-08-22T16:19:55.9811620Z ##[error]Process completed with exit code 1.
+build	Publish migration-baseline release	﻿2026-08-22T16:26:48.5953332Z ##[group]Run set -euo pipefail
+build	Publish migration-baseline release	2026-08-22T16:26:48.5953629Z ^[[36;1mset -euo pipefail^[[0m
+build	Publish migration-baseline release	2026-08-22T16:26:48.5953888Z ^[[36;1mTAG='speechnotes-v2.0.0-monorepo-baseline'^[[0m
+build	Publish migration-baseline release	2026-08-22T16:26:48.5954221Z ^[[36;1mgh release delete "$TAG" --yes --cleanup-tag || true^[[0m
+build	Publish migration-baseline release	2026-08-22T16:26:48.5955537Z ^[[36;1mgh release create "$TAG" SpeechNotes-2.0.0.apk#SpeechNotes-2.0.0.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.0.0 – monorepo migration baseline' --notes 'Migration-parity build produced entirely from InChat-App-Development. Source was extracted from immutable Drone-Fieldtest commit f280ba1e6fa8d50ab4af863642c2eaf9a3dec231; Drone-Fieldtest is not used during this build.'^[[0m
+build	Publish migration-baseline release	2026-08-22T16:26:48.5988985Z shell: /usr/bin/bash -e {0}
+build	Publish migration-baseline release	2026-08-22T16:26:48.5989210Z env:
+build	Publish migration-baseline release	2026-08-22T16:26:48.5989465Z   SPEECHNOTES_SOURCE_SHA: 6587d7e3fc1a1cdc07e2b9f919370c0c5e3467fc
+build	Publish migration-baseline release	2026-08-22T16:26:48.5989863Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Publish migration-baseline release	2026-08-22T16:26:48.5990286Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Publish migration-baseline release	2026-08-22T16:26:48.5990621Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build	Publish migration-baseline release	2026-08-22T16:26:48.5990873Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build	Publish migration-baseline release	2026-08-22T16:26:48.5991302Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
+build	Publish migration-baseline release	2026-08-22T16:26:48.5991592Z   GRADLE_USER_HOME: /home/runner/.gradle
+build	Publish migration-baseline release	2026-08-22T16:26:48.5991841Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
+build	Publish migration-baseline release	2026-08-22T16:26:48.5992091Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
+build	Publish migration-baseline release	2026-08-22T16:26:48.5992456Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+build	Publish migration-baseline release	2026-08-22T16:26:48.5992844Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+build	Publish migration-baseline release	2026-08-22T16:26:48.5993111Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
+build	Publish migration-baseline release	2026-08-22T16:26:48.5995647Z   GH_TOKEN: ***
+build	Publish migration-baseline release	2026-08-22T16:26:48.5995847Z ##[endgroup]
+build	Publish migration-baseline release	2026-08-22T16:26:56.7802313Z release not found
+build	Publish migration-baseline release	2026-08-22T16:26:56.8073753Z stat SpeechNotes-2.0.0.apk: no such file or directory
+build	Publish migration-baseline release	2026-08-22T16:26:56.8092635Z ##[error]Process completed with exit code 1.
