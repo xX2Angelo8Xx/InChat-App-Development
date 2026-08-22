@@ -1,79 +1,123 @@
-run_id=32588923348
-head_sha=8934d8a2fc873589cdd534be927cfc106ee03370
+run_id=32589335331
+head_sha=53347c5ac1f652bf1b9700980802de63f4d516ab
 conclusion=failure
-run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32588923348
-recorded_utc=2026-08-22T17:56:24Z
+run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32589335331
+recorded_utc=2026-08-22T18:04:53Z
 
 ===== FAILED LOG TAIL =====
-build	Build signed release APK	﻿2026-08-22T17:53:59.7875583Z ##[group]Run set -euo pipefail
-build	Build signed release APK	2026-08-22T17:53:59.7875982Z ^[[36;1mset -euo pipefail^[[0m
-build	Build signed release APK	2026-08-22T17:53:59.7876406Z ^[[36;1m(cd SpeechNotes && gradle --no-daemon :app:assembleRelease)^[[0m
-build	Build signed release APK	2026-08-22T17:53:59.7917090Z shell: /usr/bin/bash -e {0}
-build	Build signed release APK	2026-08-22T17:53:59.7917404Z env:
-build	Build signed release APK	2026-08-22T17:53:59.7917745Z   SPEECHNOTES_SOURCE_SHA: 8934d8a2fc873589cdd534be927cfc106ee03370
-build	Build signed release APK	2026-08-22T17:53:59.7918256Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
-build	Build signed release APK	2026-08-22T17:53:59.7918792Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
-build	Build signed release APK	2026-08-22T17:53:59.7919236Z   ANDROID_HOME: /usr/local/lib/android/sdk
-build	Build signed release APK	2026-08-22T17:53:59.7919580Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-build	Build signed release APK	2026-08-22T17:53:59.7919944Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
-build	Build signed release APK	2026-08-22T17:53:59.7920286Z   GRADLE_USER_HOME: /home/runner/.gradle
-build	Build signed release APK	2026-08-22T17:53:59.7920611Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
-build	Build signed release APK	2026-08-22T17:53:59.7921179Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
-build	Build signed release APK	2026-08-22T17:53:59.7921867Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
-build	Build signed release APK	2026-08-22T17:53:59.7922392Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
-build	Build signed release APK	2026-08-22T17:53:59.7922754Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
-build	Build signed release APK	2026-08-22T17:53:59.7923066Z ##[endgroup]
-build	Build signed release APK	2026-08-22T17:54:00.4601198Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
-build	Build signed release APK	2026-08-22T17:54:01.7593752Z Daemon will be stopped at the end of the build 
-build	Build signed release APK	2026-08-22T17:54:12.1606632Z > Task :app:preBuild UP-TO-DATE
-build	Build signed release APK	2026-08-22T17:54:12.1615159Z > Task :app:preReleaseBuild UP-TO-DATE
-build	Build signed release APK	2026-08-22T17:54:12.3626083Z > Task :app:javaPreCompileRelease
-build	Build signed release APK	2026-08-22T17:54:12.7601104Z > Task :app:generateReleaseResValues
-build	Build signed release APK	2026-08-22T17:54:12.7639724Z > Task :app:checkReleaseAarMetadata
-build	Build signed release APK	2026-08-22T17:54:12.7652794Z > Task :app:mapReleaseSourceSetPaths
-build	Build signed release APK	2026-08-22T17:54:12.8617317Z > Task :app:generateReleaseResources
-build	Build signed release APK	2026-08-22T17:54:13.3589727Z > Task :app:packageReleaseResources
-build	Build signed release APK	2026-08-22T17:54:13.6587697Z > Task :app:mergeReleaseResources
-build	Build signed release APK	2026-08-22T17:54:14.3606526Z > Task :app:createReleaseCompatibleScreenManifests
-build	Build signed release APK	2026-08-22T17:54:14.3626583Z > Task :app:extractDeepLinksRelease
-build	Build signed release APK	2026-08-22T17:54:14.4621669Z > Task :app:parseReleaseLocalResources
-build	Build signed release APK	2026-08-22T17:54:14.5590922Z 
-build	Build signed release APK	2026-08-22T17:54:14.5601775Z > Task :app:processReleaseMainManifest
-build	Build signed release APK	2026-08-22T17:54:14.5603547Z /home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/src/main/AndroidManifest.xml:11:9-41 Warning:
-build	Build signed release APK	2026-08-22T17:54:14.5606596Z 	android:extractNativeLibs should not be specified in this source AndroidManifest.xml file. See https://d.android.com/guide/topics/manifest/application-element#extractNativeLibs for more information.
-build	Build signed release APK	2026-08-22T17:54:14.5609568Z The AGP Upgrade Assistant can remove the attribute from the AndroidManifest.xml file and update the build file accordingly. See https://d.android.com/studio/build/agp-upgrade-assistant for more information.
-build	Build signed release APK	2026-08-22T17:54:14.8599255Z 
-build	Build signed release APK	2026-08-22T17:54:14.8616876Z > Task :app:processReleaseManifest
-build	Build signed release APK	2026-08-22T17:54:14.9588811Z > Task :app:extractProguardFiles
-build	Build signed release APK	2026-08-22T17:54:16.8600026Z > Task :app:configureCMakeRelease[arm64-v8a]
-build	Build signed release APK	2026-08-22T17:54:44.8616465Z > Task :app:processReleaseManifestForPackage
-build	Build signed release APK	2026-08-22T17:54:46.8596316Z > Task :app:buildCMakeRelease[arm64-v8a]
-build	Build signed release APK	2026-08-22T17:56:05.7594104Z > Task :app:mergeReleaseJniLibFolders
-build	Build signed release APK	2026-08-22T17:56:06.3589850Z > Task :app:mergeReleaseNativeLibs
-build	Build signed release APK	2026-08-22T17:56:06.3590850Z > Task :app:processReleaseResources
-build	Build signed release APK	2026-08-22T17:56:06.3591694Z > Task :app:checkReleaseDuplicateClasses
-build	Build signed release APK	2026-08-22T17:56:09.1628143Z /home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/src/main/java/com/chatgpt/speechnotes/SpeakerProfile.java:55: error: unreported exception JSONException; must be caught or declared to be thrown
-build	Build signed release APK	2026-08-22T17:56:09.1631104Z 
-build	Build signed release APK	2026-08-22T17:56:09.1658302Z     private static JSONArray vectorToJson(float[] v) { JSONArray a = new JSONArray(); for (float x : v) a.put((double) x); return a; }
-build	Build signed release APK	2026-08-22T17:56:09.1659491Z > Task :app:compileReleaseJavaWithJavac
-build	Build signed release APK	2026-08-22T17:56:09.1666209Z                                                                                                              ^
-build	Build signed release APK	2026-08-22T17:56:09.4592910Z Note: Some input files use or override a deprecated API.
-build	Build signed release APK	2026-08-22T17:56:09.4593523Z 
-build	Build signed release APK	2026-08-22T17:56:09.4598092Z Note: Recompile with -Xlint:deprecation for details.
-build	Build signed release APK	2026-08-22T17:56:09.4598907Z > Task :app:compileReleaseJavaWithJavac FAILED
-build	Build signed release APK	2026-08-22T17:56:09.4600153Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_9-1787421244208.json
-build	Build signed release APK	2026-08-22T17:56:09.4601083Z 1 error
-build	Build signed release APK	2026-08-22T17:56:09.5590025Z 
-build	Build signed release APK	2026-08-22T17:56:09.5616703Z FAILURE: Build failed with an exception.
-build	Build signed release APK	2026-08-22T17:56:09.5618245Z 21 actionable tasks: 21 executed
-build	Build signed release APK	2026-08-22T17:56:09.5645639Z 
-build	Build signed release APK	2026-08-22T17:56:09.5656746Z * What went wrong:
-build	Build signed release APK	2026-08-22T17:56:09.5661696Z Execution failed for task ':app:compileReleaseJavaWithJavac'.
-build	Build signed release APK	2026-08-22T17:56:09.5662662Z > Compilation failed; see the compiler error output for details.
-build	Build signed release APK	2026-08-22T17:56:09.5663096Z 
-build	Build signed release APK	2026-08-22T17:56:09.5663387Z * Try:
-build	Build signed release APK	2026-08-22T17:56:09.5663876Z > Run with --info option to get more log output.
-build	Build signed release APK	2026-08-22T17:56:09.5664301Z > Run with --scan to get full insights.
-build	Build signed release APK	2026-08-22T17:56:09.5664638Z 
-build	Build signed release APK	2026-08-22T17:56:09.5664772Z BUILD FAILED in 2m 9s
-build	Build signed release APK	2026-08-22T17:56:09.7696286Z ##[error]Process completed with exit code 1.
+build	Android lint hard gate	﻿2026-08-22T18:04:16.3222126Z ##[group]Run set -euo pipefail
+build	Android lint hard gate	2026-08-22T18:04:16.3222543Z ^[[36;1mset -euo pipefail^[[0m
+build	Android lint hard gate	2026-08-22T18:04:16.3222956Z ^[[36;1m(cd SpeechNotes && gradle --no-daemon :app:lintRelease)^[[0m
+build	Android lint hard gate	2026-08-22T18:04:16.3328601Z shell: /usr/bin/bash -e {0}
+build	Android lint hard gate	2026-08-22T18:04:16.3329225Z env:
+build	Android lint hard gate	2026-08-22T18:04:16.3329662Z   SPEECHNOTES_SOURCE_SHA: 53347c5ac1f652bf1b9700980802de63f4d516ab
+build	Android lint hard gate	2026-08-22T18:04:16.3330340Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Android lint hard gate	2026-08-22T18:04:16.3331048Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
+build	Android lint hard gate	2026-08-22T18:04:16.3331634Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build	Android lint hard gate	2026-08-22T18:04:16.3332074Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build	Android lint hard gate	2026-08-22T18:04:16.3332536Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
+build	Android lint hard gate	2026-08-22T18:04:16.3332976Z   GRADLE_USER_HOME: /home/runner/.gradle
+build	Android lint hard gate	2026-08-22T18:04:16.3333396Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
+build	Android lint hard gate	2026-08-22T18:04:16.3333830Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
+build	Android lint hard gate	2026-08-22T18:04:16.3334505Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+build	Android lint hard gate	2026-08-22T18:04:16.3335208Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+build	Android lint hard gate	2026-08-22T18:04:16.3335673Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
+build	Android lint hard gate	2026-08-22T18:04:16.3336066Z ##[endgroup]
+build	Android lint hard gate	2026-08-22T18:04:17.0051595Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+build	Android lint hard gate	2026-08-22T18:04:18.1033523Z Daemon will be stopped at the end of the build 
+build	Android lint hard gate	2026-08-22T18:04:25.4090808Z > Task :app:preBuild UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.4120056Z > Task :app:preReleaseBuild UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.5065851Z > Task :app:javaPreCompileRelease UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.6057697Z > Task :app:checkReleaseAarMetadata UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.6070076Z > Task :app:generateReleaseResValues UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.6104919Z > Task :app:mapReleaseSourceSetPaths UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.6105780Z > Task :app:generateReleaseResources UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7050465Z > Task :app:mergeReleaseResources UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7059780Z > Task :app:packageReleaseResources UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7068640Z > Task :app:parseReleaseLocalResources UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7077786Z > Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7078645Z > Task :app:extractDeepLinksRelease UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7079641Z > Task :app:processReleaseMainManifest UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7082293Z > Task :app:processReleaseManifest UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.7083080Z > Task :app:processReleaseManifestForPackage UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.8032166Z > Task :app:processReleaseResources UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.9033103Z > Task :app:compileReleaseJavaWithJavac UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:25.9034223Z > Task :app:extractProguardFiles UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:26.0097109Z > Task :app:generateReleaseLintReportModel
+build	Android lint hard gate	2026-08-22T18:04:26.0119727Z > Task :app:preReleaseUnitTestBuild UP-TO-DATE
+build	Android lint hard gate	2026-08-22T18:04:26.1080364Z > Task :app:bundleReleaseClassesToCompileJar
+build	Android lint hard gate	2026-08-22T18:04:26.3034043Z > Task :app:generateReleaseUnitTestLintModel
+build	Android lint hard gate	2026-08-22T18:04:31.3031944Z > Task :app:lintAnalyzeReleaseUnitTest
+build	Android lint hard gate	2026-08-22T18:04:37.4040307Z > Task :app:lintAnalyzeRelease
+build	Android lint hard gate	2026-08-22T18:04:37.8069586Z 
+build	Android lint hard gate	2026-08-22T18:04:37.8099861Z > Task :app:lintReportRelease
+build	Android lint hard gate	2026-08-22T18:04:37.8145768Z Wrote HTML report to file:///home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/build/reports/lint-results-release.html
+build	Android lint hard gate	2026-08-22T18:04:37.8159660Z 
+build	Android lint hard gate	2026-08-22T18:04:37.8160321Z > Task :app:lintRelease FAILED
+build	Android lint hard gate	2026-08-22T18:04:37.8161070Z Lint found 2 errors, 58 warnings. First failure:
+build	Android lint hard gate	2026-08-22T18:04:37.8161512Z 
+build	Android lint hard gate	2026-08-22T18:04:37.8205042Z ##[error]/home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/src/main/java/com/chatgpt/speechnotes/SpeakerProfilesActivity.java:89: Error: Call requires permission which may be rejected by user: code should explicitly check to see if permission is available (with checkPermission) or explicitly handle a potential SecurityException [MissingPermission]
+build	Android lint hard gate	2026-08-22T18:04:37.8210538Z             rec = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION, SR, AudioFormat.CHANNEL_IN_MONO,
+build	Android lint hard gate	2026-08-22T18:04:37.8211649Z                   ^
+build	Android lint hard gate	2026-08-22T18:04:37.8211922Z 
+build	Android lint hard gate	2026-08-22T18:04:37.8212322Z    Explanation for issues of type "MissingPermission":
+build	Android lint hard gate	2026-08-22T18:04:37.8213277Z    This check scans through your code and libraries and looks at the APIs
+build	Android lint hard gate	2026-08-22T18:04:37.8214405Z    being used, and checks this against the set of permissions required to
+build	Android lint hard gate	2026-08-22T18:04:37.8215559Z    access those APIs. If the code using those APIs is called at runtime, then
+build	Android lint hard gate	2026-08-22T18:04:37.8216370Z    the program will crash.
+build	Android lint hard gate	2026-08-22T18:04:37.8216710Z 
+build	Android lint hard gate	2026-08-22T18:04:37.8217321Z    Furthermore, for permissions that are revocable (with targetSdkVersion 23),
+build	Android lint hard gate	2026-08-22T18:04:37.8218484Z    client code must also be prepared to handle the calls throwing an exception
+build	Android lint hard gate	2026-08-22T18:04:37.8219789Z    if the user rejects the request for permission at runtime.
+build	Android lint hard gate	2026-08-22T18:04:37.8220268Z 
+build	Android lint hard gate	2026-08-22T18:04:37.8220282Z 
+build	Android lint hard gate	2026-08-22T18:04:37.8220593Z The full lint text report is located at:
+build	Android lint hard gate	2026-08-22T18:04:37.8222623Z   /home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/build/intermediates/lint_intermediate_text_report/release/lintReportRelease/lint-results-release.txt
+build	Android lint hard gate	2026-08-22T18:04:37.9034373Z 
+build	Android lint hard gate	2026-08-22T18:04:37.9035633Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_10-1787421859977.json
+build	Android lint hard gate	2026-08-22T18:04:37.9059747Z FAILURE: Build failed with an exception.
+build	Android lint hard gate	2026-08-22T18:04:37.9075762Z 
+build	Android lint hard gate	2026-08-22T18:04:37.9076976Z * What went wrong:
+build	Android lint hard gate	2026-08-22T18:04:37.9105369Z Execution failed for task ':app:lintRelease'.
+build	Android lint hard gate	2026-08-22T18:04:37.9110817Z > Lint found errors in the project; aborting build.
+build	Android lint hard gate	2026-08-22T18:04:37.9111503Z   
+build	Android lint hard gate	2026-08-22T18:04:37.9112375Z   Fix the issues identified by lint, or create a baseline to see only new errors.
+build	Android lint hard gate	2026-08-22T18:04:37.9114028Z   To create a baseline, run `gradlew updateLintBaseline` after adding the following to the module's build.gradle file:
+build	Android lint hard gate	2026-08-22T18:04:37.9115629Z   ```
+build	Android lint hard gate	2026-08-22T18:04:37.9116013Z   android {
+build	Android lint hard gate	2026-08-22T18:04:37.9116389Z       lint {
+build	Android lint hard gate	2026-08-22T18:04:37.9116990Z           baseline = file("lint-baseline.xml")
+build	Android lint hard gate	2026-08-22T18:04:37.9117592Z       }
+build	Android lint hard gate	2026-08-22T18:04:37.9117977Z   }
+build	Android lint hard gate	2026-08-22T18:04:37.9118343Z   ```
+build	Android lint hard gate	2026-08-22T18:04:37.9123291Z   For more details, see https://developer.android.com/studio/write/lint#snapshot
+build	Android lint hard gate	2026-08-22T18:04:37.9132504Z   
+build	Android lint hard gate	2026-08-22T18:04:37.9133148Z   Lint found 2 errors, 58 warnings. First failure:
+build	Android lint hard gate	2026-08-22T18:04:37.9133766Z   
+build	Android lint hard gate	2026-08-22T18:04:37.9139162Z ##[error]  /home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/src/main/java/com/chatgpt/speechnotes/SpeakerProfilesActivity.java:89: Error: Call requires permission which may be rejected by user: code should explicitly check to see if permission is available (with checkPermission) or explicitly handle a potential SecurityException [MissingPermission]
+build	Android lint hard gate	2026-08-22T18:04:37.9144165Z               rec = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION, SR, AudioFormat.CHANNEL_IN_MONO,
+build	Android lint hard gate	2026-08-22T18:04:37.9145277Z                     ^
+build	Android lint hard gate	2026-08-22T18:04:37.9145726Z   
+build	Android lint hard gate	2026-08-22T18:04:37.9146327Z      Explanation for issues of type "MissingPermission":
+build	Android lint hard gate	2026-08-22T18:04:37.9161037Z      This check scans through your code and libraries and looks at the APIs
+build	Android lint hard gate	2026-08-22T18:04:37.9162260Z      being used, and checks this against the set of permissions required to
+build	Android lint hard gate	2026-08-22T18:04:37.9163464Z      access those APIs. If the code using those APIs is called at runtime, then
+build	Android lint hard gate	2026-08-22T18:04:37.9164374Z      the program will crash.
+build	Android lint hard gate	2026-08-22T18:04:37.9165196Z   
+build	Android lint hard gate	2026-08-22T18:04:37.9166046Z      Furthermore, for permissions that are revocable (with targetSdkVersion 23),
+build	Android lint hard gate	2026-08-22T18:04:37.9167298Z      client code must also be prepared to handle the calls throwing an exception
+build	Android lint hard gate	2026-08-22T18:04:37.9168354Z      if the user rejects the request for permission at runtime.
+build	Android lint hard gate	2026-08-22T18:04:37.9169230Z   
+build	Android lint hard gate	2026-08-22T18:04:37.9169592Z   
+build	Android lint hard gate	2026-08-22T18:04:37.9170124Z   The full lint text report is located at:
+build	Android lint hard gate	2026-08-22T18:04:37.9172274Z     /home/runner/work/InChat-App-Development/InChat-App-Development/apps/speech-notes/android/app/build/intermediates/lint_intermediate_text_report/release/lintReportRelease/lint-results-release.txt
+build	Android lint hard gate	2026-08-22T18:04:37.9173852Z 
+build	Android lint hard gate	2026-08-22T18:04:37.9174016Z * Try:
+build	Android lint hard gate	2026-08-22T18:04:37.9174628Z > Run with --stacktrace option to get the stack trace.
+build	Android lint hard gate	2026-08-22T18:04:37.9175520Z > Run with --info or --debug option to get more log output.
+build	Android lint hard gate	2026-08-22T18:04:37.9176300Z > Run with --scan to get full insights.
+build	Android lint hard gate	2026-08-22T18:04:37.9177056Z > Get more help at https://help.gradle.org.
+build	Android lint hard gate	2026-08-22T18:04:37.9177490Z 
+build	Android lint hard gate	2026-08-22T18:04:37.9177727Z BUILD FAILED in 21s
+build	Android lint hard gate	2026-08-22T18:04:37.9178379Z 23 actionable tasks: 7 executed, 16 up-to-date
+build	Android lint hard gate	2026-08-22T18:04:38.1239834Z ##[error]Process completed with exit code 1.
