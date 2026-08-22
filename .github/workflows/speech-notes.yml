@@ -124,7 +124,7 @@ jobs:
           set -euo pipefail
           APK="$GITHUB_WORKSPACE/SpeechNotes/app/build/outputs/apk/release/app-release.apk"
           $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose "$APK"
-          $ANDROID_HOME/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "versionCode='21' versionName='2.0.1'"
+          $ANDROID_HOME/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "versionCode='22' versionName='2.0.1'"
           unzip -l "$APK" > /tmp/apk-files.txt
           grep -q 'libggml-cpu-android_armv9.0_1.so' /tmp/apk-files.txt
           grep -q 'libggml-cpu-android_armv9.0_1_kai.so' /tmp/apk-files.txt
@@ -149,5 +149,5 @@ jobs:
           set -euo pipefail
           TAG='speechnotes-v2.0.1'
           gh release delete "$TAG" --yes --cleanup-tag || true
-          gh release create "$TAG" SpeechNotes-2.0.1.apk#SpeechNotes-2.0.1.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.0.1' --notes 'First normal update-test build from InChat-App-Development. Same applicationId and signing identity as v2.0.0, with versionCode 21 / versionName 2.0.1 so Android can exercise the real in-place app update path. No intentional functional changes beyond the repository migration baseline.'
+          gh release create "$TAG" SpeechNotes-2.0.1.apk#SpeechNotes-2.0.1.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.0.1' --notes 'First normal update-test build from InChat-App-Development. Same applicationId and signing identity as v2.0.0, with versionCode 22 / versionName 2.0.1 so Android can exercise the real in-place app update path. No intentional functional changes beyond the repository migration baseline.'
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,url,assets
