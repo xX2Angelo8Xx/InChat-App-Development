@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -86,16 +87,16 @@ public final class SpeakerProfilesActivity extends Activity {
         AudioRecord rec = null;
         try {
             if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                throw new SecurityException("Mikrofonberechtigung wurde während der Profilaufnahme entzogen");
+                throw new SecurityException("Mikrofonberechtigung fehlt");
             }
             int min = AudioRecord.getMinBufferSize(SR, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
             rec = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION, SR, AudioFormat.CHANNEL_IN_MONO,
                     AudioFormat.ENCODING_PCM_16BIT, Math.max(min, SR * 2));
             if (rec.getState() != AudioRecord.STATE_INITIALIZED) throw new IllegalStateException("Mikrofon konnte nicht initialisiert werden");
-            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                throw new SecurityException("Mikrofonberechtigung wurde vor Aufnahmestart entzogen");
-            }
             short[] all = new short[SR * RECORD_SECONDS]; short[] buf = new short[2048]; int pos = 0; boolean page2 = false;
+            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                throw new SecurityException("Mikrofonberechtigung wurde entzogen");
+            }
             rec.startRecording(); long start = SystemClock.elapsedRealtime(); int lastShown = -1;
             while (pos < all.length) {
                 int n = rec.read(buf, 0, Math.min(buf.length, all.length - pos));
@@ -137,7 +138,7 @@ public final class SpeakerProfilesActivity extends Activity {
     }
 
     private static double rms(short[] x) { double s=0; for(short v:x){double f=v/32768.0;s+=f*f;} return Math.sqrt(s/Math.max(1,x.length)); }
-    private TextView label(String s,int sp,boolean bold){TextView v=new TextView(this);v.setText(s);v.setTextSize(sp);v.setTextColor(Color.rgb(242,246,250));if(bold)v.setTypeface(null,1);return v;}
+    private TextView label(String s,int sp,boolean bold){TextView v=new TextView(this);v.setText(s);v.setTextSize(sp);v.setTextColor(Color.rgb(242,246,250));if(bold)v.setTypeface(null,Typeface.BOLD);return v;}
     private TextView space(int h){TextView v=new TextView(this);v.setHeight(dp(h));return v;}
     private int dp(int v){return (int)(v*getResources().getDisplayMetrics().density+0.5f);}
 }
