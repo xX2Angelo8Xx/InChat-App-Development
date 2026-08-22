@@ -70,7 +70,8 @@ jobs:
             patch_speechnotes_v184_recording_fix.py \
             patch_speechnotes_v185_runtime_session.py \
             patch_speechnotes_v190_streaming.py \
-            patch_speechnotes_v200_diarization.py; do
+            patch_speechnotes_v200_diarization.py \
+            patch_speechnotes_v201_migration_release.py; do
             python3 "tooling/speech-notes/patches/$patch"
           done
 
@@ -123,6 +124,7 @@ jobs:
           set -euo pipefail
           APK="$GITHUB_WORKSPACE/SpeechNotes/app/build/outputs/apk/release/app-release.apk"
           $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose "$APK"
+          $ANDROID_HOME/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "versionCode='21' versionName='2.0.1'"
           unzip -l "$APK" > /tmp/apk-files.txt
           grep -q 'libggml-cpu-android_armv9.0_1.so' /tmp/apk-files.txt
           grep -q 'libggml-cpu-android_armv9.0_1_kai.so' /tmp/apk-files.txt
@@ -130,22 +132,22 @@ jobs:
           grep -q 'assets/speaker/campplus_cn_en_common_200k.onnx' /tmp/apk-files.txt
           grep -q 'libonnxruntime.so' /tmp/apk-files.txt
           ! grep -q 'libggml-vulkan.so' /tmp/apk-files.txt
-          cp "$APK" "$GITHUB_WORKSPACE/SpeechNotes-2.0.0.apk"
-          test -s "$GITHUB_WORKSPACE/SpeechNotes-2.0.0.apk"
+          cp "$APK" "$GITHUB_WORKSPACE/SpeechNotes-2.0.1.apk"
+          test -s "$GITHUB_WORKSPACE/SpeechNotes-2.0.1.apk"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: SpeechNotes-v2.0.0-arm64
-          path: SpeechNotes-2.0.0.apk
+          name: SpeechNotes-v2.0.1-arm64
+          path: SpeechNotes-2.0.1.apk
           compression-level: 0
           retention-days: 14
 
-      - name: Publish migration-baseline release
+      - name: Publish update-test release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG='speechnotes-v2.0.0-monorepo-baseline'
+          TAG='speechnotes-v2.0.1'
           gh release delete "$TAG" --yes --cleanup-tag || true
-          gh release create "$TAG" SpeechNotes-2.0.0.apk#SpeechNotes-2.0.0.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.0.0 – monorepo migration baseline' --notes 'Migration-parity build produced entirely from InChat-App-Development. Source was extracted from immutable Drone-Fieldtest commit f280ba1e6fa8d50ab4af863642c2eaf9a3dec231; Drone-Fieldtest is not used during this build.'
+          gh release create "$TAG" SpeechNotes-2.0.1.apk#SpeechNotes-2.0.1.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.0.1' --notes 'First normal update-test build from InChat-App-Development. Same applicationId and signing identity as v2.0.0, with versionCode 21 / versionName 2.0.1 so Android can exercise the real in-place app update path. No intentional functional changes beyond the repository migration baseline.'
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,url,assets
