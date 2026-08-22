@@ -12,11 +12,11 @@ if not m:
     raise SystemExit('Expected versionCode not found after patch chain')
 
 current_code = int(m.group(1))
-if current_code != 21:
-    raise SystemExit(f'Expected v2.0.0 versionCode 21 after patch chain, got {current_code}')
+if current_code != 20:
+    raise SystemExit(f'Expected v2.0.0 versionCode 20 after patch chain, got {current_code}')
 
 s = re.sub(r"versionName\s+['\"]2\.0\.0['\"]", "versionName '2.0.1'", s, count=1)
-s = s[:m.start()] + 'versionCode 22' + s[m.end():]
+s = s[:m.start()] + 'versionCode 21' + s[m.end():]
 p.write_text(s)
 
-print('Applied v2.0.1 monorepo migration release version bump (versionCode 22)')
+print('Applied v2.0.1 monorepo migration release version bump (versionCode 21)')
