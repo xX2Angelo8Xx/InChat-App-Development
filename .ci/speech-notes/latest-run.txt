@@ -1,31 +1,5 @@
-run_id=32584442584
-head_sha=6587d7e3fc1a1cdc07e2b9f919370c0c5e3467fc
-conclusion=failure
-run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32584442584
-recorded_utc=2026-08-22T16:27:22Z
-
-===== FAILED LOG TAIL =====
-build	Publish migration-baseline release	﻿2026-08-22T16:26:48.5953332Z ##[group]Run set -euo pipefail
-build	Publish migration-baseline release	2026-08-22T16:26:48.5953629Z ^[[36;1mset -euo pipefail^[[0m
-build	Publish migration-baseline release	2026-08-22T16:26:48.5953888Z ^[[36;1mTAG='speechnotes-v2.0.0-monorepo-baseline'^[[0m
-build	Publish migration-baseline release	2026-08-22T16:26:48.5954221Z ^[[36;1mgh release delete "$TAG" --yes --cleanup-tag || true^[[0m
-build	Publish migration-baseline release	2026-08-22T16:26:48.5955537Z ^[[36;1mgh release create "$TAG" SpeechNotes-2.0.0.apk#SpeechNotes-2.0.0.apk --repo "$GITHUB_REPOSITORY" --target "$SPEECHNOTES_SOURCE_SHA" --title 'Speech Notes v2.0.0 – monorepo migration baseline' --notes 'Migration-parity build produced entirely from InChat-App-Development. Source was extracted from immutable Drone-Fieldtest commit f280ba1e6fa8d50ab4af863642c2eaf9a3dec231; Drone-Fieldtest is not used during this build.'^[[0m
-build	Publish migration-baseline release	2026-08-22T16:26:48.5988985Z shell: /usr/bin/bash -e {0}
-build	Publish migration-baseline release	2026-08-22T16:26:48.5989210Z env:
-build	Publish migration-baseline release	2026-08-22T16:26:48.5989465Z   SPEECHNOTES_SOURCE_SHA: 6587d7e3fc1a1cdc07e2b9f919370c0c5e3467fc
-build	Publish migration-baseline release	2026-08-22T16:26:48.5989863Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
-build	Publish migration-baseline release	2026-08-22T16:26:48.5990286Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-8/x64
-build	Publish migration-baseline release	2026-08-22T16:26:48.5990621Z   ANDROID_HOME: /usr/local/lib/android/sdk
-build	Publish migration-baseline release	2026-08-22T16:26:48.5990873Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-build	Publish migration-baseline release	2026-08-22T16:26:48.5991302Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
-build	Publish migration-baseline release	2026-08-22T16:26:48.5991592Z   GRADLE_USER_HOME: /home/runner/.gradle
-build	Publish migration-baseline release	2026-08-22T16:26:48.5991841Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
-build	Publish migration-baseline release	2026-08-22T16:26:48.5992091Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
-build	Publish migration-baseline release	2026-08-22T16:26:48.5992456Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
-build	Publish migration-baseline release	2026-08-22T16:26:48.5992844Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
-build	Publish migration-baseline release	2026-08-22T16:26:48.5993111Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
-build	Publish migration-baseline release	2026-08-22T16:26:48.5995647Z   GH_TOKEN: ***
-build	Publish migration-baseline release	2026-08-22T16:26:48.5995847Z ##[endgroup]
-build	Publish migration-baseline release	2026-08-22T16:26:56.7802313Z release not found
-build	Publish migration-baseline release	2026-08-22T16:26:56.8073753Z stat SpeechNotes-2.0.0.apk: no such file or directory
-build	Publish migration-baseline release	2026-08-22T16:26:56.8092635Z ##[error]Process completed with exit code 1.
+run_id=32584796374
+head_sha=4f4fa28834762d091fee5817a194c0c6e1a46e64
+conclusion=success
+run_url=https://github.com/xX2Angelo8Xx/InChat-App-Development/actions/runs/32584796374
+recorded_utc=2026-08-22T16:38:05Z
