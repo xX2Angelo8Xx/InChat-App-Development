@@ -8,6 +8,8 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,3 +41,16 @@ jobs:
           name: Loopline-1.0.0-debug
           path: apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+      - name: Publish direct playtest APK
+        if: github.ref == 'refs/heads/feat/loopline-initial'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create loopline-playtest-v1.0.0 \
+            'apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk#Loopline-1.0.0-test.apk' \
+            --target "$GITHUB_SHA" \
+            --title 'Loopline 1.0.0 · Playtest' \
+            --notes 'Offline Android playtest. Test signing certificate; no production release.' \
+            --prerelease
+          gh release view loopline-playtest-v1.0.0 --json assets \
+            --jq '.assets[].name' | grep -Fx 'Loopline-1.0.0-test.apk'
