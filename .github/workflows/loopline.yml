@@ -23,6 +23,8 @@ jobs:
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '8.9' }
+      - name: Restore public playtest key
+        run: base64 -d apps/loopline/tooling/playtest.jks.b64 > apps/loopline/android/playtest.jks
       - name: Build and lint
         working-directory: apps/loopline/android
         run: gradle :app:assembleDebug :app:lintDebug --stacktrace
@@ -31,6 +33,7 @@ jobs:
           test -s apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk
           unzip -l apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep -E 'assets/(index.html|game.js|style.css)'
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='com.inchat.loopline' versionCode='1' versionName='1.0.0'"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep 'CN=Loopline Playtest'
       - uses: actions/upload-artifact@v4
         with:
           name: Loopline-1.0.0-debug

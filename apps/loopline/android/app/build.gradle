@@ -3,7 +3,18 @@ android {
     namespace 'com.inchat.loopline'
     compileSdk 35
     defaultConfig { applicationId 'com.inchat.loopline'; minSdk 26; targetSdk 35; versionCode 1; versionName '1.0.0' }
-    buildTypes { release { minifyEnabled false } }
+    signingConfigs {
+        playtest {
+            storeFile file('../playtest.jks')
+            storePassword 'loopline-test'
+            keyAlias 'loopline-playtest'
+            keyPassword 'loopline-test'
+        }
+    }
+    buildTypes {
+        debug { signingConfig signingConfigs.playtest }
+        release { minifyEnabled false }
+    }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
     lint { abortOnError true }
 }
