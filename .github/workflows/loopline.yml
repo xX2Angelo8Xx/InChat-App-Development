@@ -46,11 +46,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create loopline-playtest-v1.0.0 \
-            'apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk#Loopline-1.0.0-test.apk' \
-            --target "$GITHUB_SHA" \
-            --title 'Loopline 1.0.0 · Playtest' \
-            --notes 'Offline Android playtest. Test signing certificate; no production release.' \
-            --prerelease
+          cp apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk Loopline-1.0.0-test.apk
+          if gh release view loopline-playtest-v1.0.0 >/dev/null 2>&1; then
+            gh release upload loopline-playtest-v1.0.0 Loopline-1.0.0-test.apk --clobber
+          else
+            gh release create loopline-playtest-v1.0.0 Loopline-1.0.0-test.apk \
+              --target "$GITHUB_SHA" \
+              --title 'Loopline 1.0.0 · Playtest' \
+              --notes 'Offline Android playtest. Test signing certificate; no production release.' \
+              --prerelease
+          fi
           gh release view loopline-playtest-v1.0.0 --json assets \
             --jq '.assets[].name' | grep -Fx 'Loopline-1.0.0-test.apk'
