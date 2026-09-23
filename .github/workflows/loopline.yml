@@ -1,0 +1,60 @@
+name: Loopline
+on:
+  push:
+    paths:
+      - 'apps/loopline/**'
+      - '.github/workflows/loopline.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Puzzle generator checks
+        run: node apps/loopline/tests/generators.test.js
+      - uses: actions/setup-java@v4
+        with: { distribution: 'temurin', java-version: '17' }
+      - uses: android-actions/setup-android@v3
+        with: { packages: 'platform-tools' }
+      - name: Android SDK
+        run: |
+          sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: '8.9' }
+      - name: Restore public playtest key
+        run: base64 -d apps/loopline/tooling/playtest.jks.b64 > apps/loopline/android/playtest.jks
+      - name: Build and lint
+        working-directory: apps/loopline/android
+        run: gradle :app:assembleDebug :app:lintDebug --stacktrace
+      - name: Inspect APK
+        run: |
+          test -s apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk
+          unzip -l apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep -E 'assets/(index.html|game.js|style.css)'
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='com.inchat.loopline' versionCode='4' versionName='1.2.0'"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep 'CN=Loopline Playtest'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Loopline-1.2.0-debug
+          path: apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+      - name: Publish direct playtest APK
+        if: github.ref == 'refs/heads/feat/loopline-initial'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk Loopline-1.2.0-test.apk
+          if gh release view loopline-playtest-v1.2.0 >/dev/null 2>&1; then
+            gh release upload loopline-playtest-v1.2.0 Loopline-1.2.0-test.apk --clobber
+          else
+            gh release create loopline-playtest-v1.2.0 Loopline-1.2.0-test.apk \
+              --target "$GITHUB_SHA" \
+              --title 'Loopline 1.2.0 · Playtest' \
+              --notes 'Runde drei: ansteigende Level, klarere Summenanzeige und sanftere Echo-Lernkurve. Offline Android Testbuild.' \
+              --prerelease
+          fi
+          gh release view loopline-playtest-v1.2.0 --json assets \
+            --jq '.assets[].name' | grep -Fx 'Loopline-1.2.0-test.apk'
