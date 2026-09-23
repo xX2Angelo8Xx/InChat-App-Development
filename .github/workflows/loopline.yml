@@ -34,11 +34,11 @@ jobs:
         run: |
           test -s apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk
           unzip -l apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep -E 'assets/(index.html|game.js|style.css)'
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='com.inchat.loopline' versionCode='1' versionName='1.0.0'"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='com.inchat.loopline' versionCode='2' versionName='1.1.0'"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk | grep 'CN=Loopline Playtest'
       - uses: actions/upload-artifact@v4
         with:
-          name: Loopline-1.0.0-debug
+          name: Loopline-1.1.0-debug
           path: apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
       - name: Publish direct playtest APK
@@ -46,15 +46,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk Loopline-1.0.0-test.apk
-          if gh release view loopline-playtest-v1.0.0 >/dev/null 2>&1; then
-            gh release upload loopline-playtest-v1.0.0 Loopline-1.0.0-test.apk --clobber
+          cp apps/loopline/android/app/build/outputs/apk/debug/app-debug.apk Loopline-1.1.0-test.apk
+          if gh release view loopline-playtest-v1.1.0 >/dev/null 2>&1; then
+            gh release upload loopline-playtest-v1.1.0 Loopline-1.1.0-test.apk --clobber
           else
-            gh release create loopline-playtest-v1.0.0 Loopline-1.0.0-test.apk \
+            gh release create loopline-playtest-v1.1.0 Loopline-1.1.0-test.apk \
               --target "$GITHUB_SHA" \
-              --title 'Loopline 1.0.0 · Playtest' \
-              --notes 'Offline Android playtest. Test signing certificate; no production release.' \
+              --title 'Loopline 1.1.0 · Playtest' \
+              --notes 'Runde zwei: Moduswahl, Wertung, Logo und drei überarbeitete Rätsel. Offline Android Testbuild.' \
               --prerelease
           fi
-          gh release view loopline-playtest-v1.0.0 --json assets \
-            --jq '.assets[].name' | grep -Fx 'Loopline-1.0.0-test.apk'
+          gh release view loopline-playtest-v1.1.0 --json assets \
+            --jq '.assets[].name' | grep -Fx 'Loopline-1.1.0-test.apk'

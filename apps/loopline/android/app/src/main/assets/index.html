@@ -1,20 +1,38 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#f5f1e8"><title>Loopline</title><link rel="stylesheet" href="style.css"></head><body>
-<main class="shell">
-  <header><div class="brand"><span class="mark">⌁</span><span>LOOPLINE</span></div><button id="sound" class="icon" aria-label="Ton umschalten">♪</button></header>
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#f5f1e8"><title>Loopline</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="shell">
+  <header>
+    <div class="brand" aria-label="Loopline"><svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 34C10 21 18 13 27 13c7 0 12 5 12 11s-5 11-12 11H17"/><circle cx="10" cy="34" r="3"/><circle cx="27" cy="13" r="3"/><circle cx="39" cy="24" r="3"/></svg><span>LOOPLINE</span></div>
+    <button id="sound" class="sound-button" aria-label="Ton umschalten" type="button"></button>
+  </header>
   <section id="home" class="screen">
-    <div class="eyebrow">DEIN KLEINER DENKRAUM</div><h1>Ein guter<br><em>Gedanke</em><span class="period">.</span></h1>
-    <p class="intro">Drei kurze Rätsel für heute. Ein neuer Anfang für deinen Kopf.</p>
-    <div class="date-row"><span id="today"></span><span id="streak">0 TAGE IN FOLGE</span></div>
-    <button id="daily" class="primary"><span><small>TAGESRUNDE</small><strong id="daily-label">Heute spielen</strong></span><span class="arrow">↗</span></button>
-    <button id="free" class="secondary"><span><small>WEITERSPIELEN</small><strong>Freies Training</strong></span><span class="arrow">→</span></button>
-    <div class="footer-note"><span class="dot"></span> Ohne Konto · Ohne Zeitdruck · Offline</div>
+    <div class="home-lead"><div class="eyebrow">DEIN KLEINER DENKRAUM</div><h1>Ein guter<br><em>Gedanke</em><span class="period">.</span></h1><p class="intro">Drei Rätsel. Ein frischer Blick. Jeden Tag ein kleiner Vorsprung.</p></div>
+    <div class="home-bottom">
+      <div class="date-row"><span id="today"></span><span id="streak"></span></div>
+      <button id="daily" class="primary action-card"><span><small>TAGESRUNDE</small><strong id="daily-label">Heute spielen</strong></span><span class="arrow">↗</span></button>
+      <button id="free" class="secondary action-card"><span><small>DEIN TEMPO</small><strong>Modus auswählen</strong></span><span class="arrow">→</span></button>
+      <div class="home-foot"><span id="star-total">0 STERNE</span><span>OFFLINE · OHNE KONTO</span></div>
+    </div>
+  </section>
+  <section id="choose" class="screen hidden">
+    <div class="topline"><button id="choose-back" class="text-button">← Zurück</button><span>FREIES TRAINING</span></div>
+    <div class="choose-head"><div class="eyebrow">DU ENTSCHEIDEST</div><h2>Worauf hast du<br><em>Lust?</em></h2><p>Jeder Modus hat eigene Level. Spiele, solange du möchtest.</p></div>
+    <div class="mode-list">
+      <button id="mode-path" class="mode-card"><span class="mode-glyph glyph-path">⌁</span><span class="mode-copy"><small id="count-path">0 GELÖST</small><strong>Linie</strong><span>Ein Weg durch jedes freie Feld.</span><b id="best-path">NEU</b></span><span class="mode-arrow">↗</span></button>
+      <button id="mode-sum" class="mode-card"><span class="mode-glyph glyph-sum">+</span><span class="mode-copy"><small id="count-sum">0 GELÖST</small><strong>Summe</strong><span>Sechs Zahlenziele. Neun Steine.</span><b id="best-sum">NEU</b></span><span class="mode-arrow">↗</span></button>
+      <button id="mode-memory" class="mode-card"><span class="mode-glyph glyph-memory">✳</span><span class="mode-copy"><small id="count-memory">0 GELÖST</small><strong>Echo</strong><span>Ein Muster für deinen Kopf.</span><b id="best-memory">NEU</b></span><span class="mode-arrow">↗</span></button>
+    </div>
   </section>
   <section id="game" class="screen hidden">
-    <div class="topline"><button id="back" class="text-button">← Zurück</button><span id="round-label">TAGESRUNDE · 1 / 3</span></div>
-    <div class="game-head"><div id="kind" class="eyebrow">01 / LINIE</div><h2 id="title"></h2><p id="instruction"></p></div>
+    <div class="topline"><button id="back" class="text-button">← Zurück</button><span id="round-label"></span></div>
+    <div class="game-head"><div id="kind" class="eyebrow"></div><h2 id="title"></h2><p id="instruction"></p><div id="twist" class="twist"></div></div>
     <div id="play-area"></div><div id="feedback" role="status" aria-live="polite"></div>
-    <div class="game-actions"><button id="reset" class="text-button">↺ Neustart</button><button id="hint" class="text-button">Hinweis</button></div>
+    <div class="game-actions"><button id="reset" class="text-button">↺ Neustart</button><button id="hint" class="text-button">✧ Hinweis</button></div>
     <div class="progress" id="progress"></div>
   </section>
-  <section id="result" class="screen hidden"><div class="result-art">✳</div><div class="eyebrow">RUNDE GESCHAFFT</div><h1 id="result-title">Gut<br><em>gedacht.</em></h1><p id="result-copy"></p><button id="result-next" class="primary"><span><small>WEITER</small><strong id="next-label">Nächstes Rätsel</strong></span><span class="arrow">→</span></button><button id="result-home" class="text-button">Zur Übersicht</button></section>
+  <section id="result" class="screen hidden">
+    <div class="result-art" aria-hidden="true"><svg viewBox="0 0 112 112"><circle cx="56" cy="56" r="52"/><path d="M22 75c0-28 17-48 39-48 17 0 29 12 29 27S78 81 61 81H40"/><circle cx="22" cy="75" r="4"/><circle cx="61" cy="27" r="4"/><circle cx="90" cy="54" r="4"/></svg></div>
+    <div class="eyebrow">RUNDE GESCHAFFT</div><h1 id="result-title"></h1><div id="result-score" class="result-score"></div><div id="result-detail" class="result-detail"></div><p id="result-copy"></p>
+    <div class="result-bottom"><button id="result-next" class="primary action-card"><span><small>WEITER</small><strong id="next-label"></strong></span><span class="arrow">→</span></button><button id="result-home" class="text-button">Zur Übersicht</button></div>
+  </section>
 </main><script src="game.js"></script></body></html>
