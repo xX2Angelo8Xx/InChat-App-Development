@@ -32,9 +32,10 @@
   function beep(freq=480){if(muted)return;try{const C=window.AudioContext||window.webkitAudioContext,ctx=new C(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.055,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.11);o.connect(g).connect(ctx.destination);o.start();o.stop(ctx.currentTime+.12);o.onended=()=>ctx.close();}catch(_){}}
   function streak(){let count=0,d=new Date();if(!saved.days[today()]?.complete)d.setDate(d.getDate()-1);for(let i=0;i<365;i++){const key=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');if(!saved.days[key]?.complete)break;count++;d.setDate(d.getDate()-1);}return count;}
   function home(){run++;const d=new Date();$('today').textContent=new Intl.DateTimeFormat('de-AT',{day:'numeric',month:'long'}).format(d).toUpperCase();$('streak').textContent=streak()+' TAGE IN FOLGE';$('star-total').textContent=saved.stars+' STERNE';const step=saved.days[today()]?.step||0;$('daily-label').textContent=step>=3?'Heute abgeschlossen ✓':step?step+' / 3 geschafft':'Heute spielen';show('home');}
-  function choose(){run++;kinds.forEach(k=>{$('count-'+k).textContent=(saved.freeModes[k]||0)+' GELÖST';$('best-'+k).textContent=saved.records[k]?'BESTE RUNDE '+saved.records[k].stars+' ★ · '+saved.records[k].seconds+' S':'NEU';});show('choose');}
+  function choose(){run++;kinds.forEach(k=>{$('count-'+k).textContent=(saved.freeModes[k]||0)+' GELÖST';const record=saved.records[k];$('best-'+k).textContent=record&&record.stage?'REKORD · LEVEL '+record.stage+' · '+record.stars+' ★':'NEU';});show('choose');}
   function pathPuzzle(seed,level){
-    const r=random(seed),n=level<3?4:5,length=Math.min(n*n-2,level<3?13:18+Math.min(4,level-3));
+    const r=random(seed),n=level<3?4:level<7?5:6;
+    const length=level<3?8+level*2:level<7?17+(level-3)*2:Math.min(32,26+(level-7)*2);
     let route=[];
     for(let attempt=0;attempt<120;attempt++){
       const start=Math.floor(r()*n*n),used=new Set([start]),p=[start];
@@ -42,7 +43,7 @@
       if(dfs()){route=p;break;}
     }
     if(!route.length)route=Array.from({length:n*n},(_,i)=>Math.floor(i/n)%2?n*Math.floor(i/n)+n-1-i%n:i).slice(0,length);
-    const positions=[0],gap=level<3?4:5;
+    const positions=[0],gap=level<3?3:level<7?5:Math.min(8,6+Math.floor((level-7)/3));
     for(let i=gap;i<route.length-2;i+=gap)positions.push(i);
     positions.push(route.length-1);
     const anchors=new Map(positions.map((pos,i)=>[route[pos],i+1]));
@@ -51,32 +52,42 @@
   }
   function swapDistance(a,b){const target=new Map(b.map((v,i)=>[v,i])),visited=new Set();let cycles=0;for(let i=0;i<a.length;i++){if(visited.has(i))continue;cycles++;let j=i;while(!visited.has(j)){visited.add(j);j=target.get(a[j]);}}return a.length-cycles;}
   function sumPuzzle(seed,level){
-    const r=random(seed),solution=shuffle([1,2,3,4,5,6,7,8,9],r),scramble=Math.min(6,level<3?3:4+Math.floor((level-3)/3));
-    let tiles,par;
+    const r=random(seed),solution=shuffle([1,2,3,4,5,6,7,8,9],r),distance=Math.min(6,1+Math.ceil(level/2));
     const rows=[0,1,2].map(y=>solution.slice(y*3,y*3+3).reduce((a,b)=>a+b,0));
     const cols=[0,1,2].map(x=>solution[x]+solution[x+3]+solution[x+6]);
-    for(let attempt=0;attempt<50;attempt++){tiles=solution.slice();for(let i=0;i<scramble;i++){const a=Math.floor(r()*9),b=(a+1+Math.floor(r()*8))%9;[tiles[a],tiles[b]]=[tiles[b],tiles[a]];}par=swapDistance(tiles,solution);if(par>=Math.min(3,scramble))break;}
-    const p={type:'sum',n:3,tiles,solution,par,rows,cols,selected:null,level};
-    if(solvedCount(p)===6){[tiles[0],tiles[1]]=[tiles[1],tiles[0]];p.par=swapDistance(tiles,solution);}
-    p.initial=tiles.slice();
+    let p;
+    for(let attempt=0;attempt<100;attempt++){
+      const tiles=solution.slice(),cycle=shuffle([0,1,2,3,4,5,6,7,8],r).slice(0,distance+1),values=cycle.map(i=>tiles[i]);
+      cycle.forEach((i,j)=>{tiles[i]=values[(j+1)%cycle.length];});
+      p={type:'sum',n:3,tiles,solution,par:distance,rows,cols,selected:null,level};
+      if(solvedCount(p)<6)break;
+    }
+    p.initial=p.tiles.slice();
     return p;
   }
   function memoryPuzzle(seed,level){
-    const r=random(seed),n=level<3?3:4,count=Math.min(9,level<3?5:6+Math.floor((level-3)/2)),sequence=[];
+    const r=random(seed),n=level<4?3:4,reverse=level>=6,sequence=[];
+    const count=reverse?Math.min(9,4+level-6):Math.min(6,2+level);
     while(sequence.length<count){const i=Math.floor(r()*n*n);if(i!==sequence[sequence.length-1])sequence.push(i);}
-    return {type:'memory',n,sequence,answer:0,phase:'ready',reverse:level>=3,level};
+    return {type:'memory',n,sequence,answer:0,phase:'ready',reverse,level};
   }
-  function make(){const kind=mode==='daily'?kinds[index]:kindChoice,seed=hash((mode==='daily'?today():'free')+':'+index+':'+kind+':v2'),level=mode==='daily'?4:Math.min(9,2+Math.floor(index/2));return kind==='path'?pathPuzzle(seed,level):kind==='sum'?sumPuzzle(seed,level):memoryPuzzle(seed,level);}
+  function make(){const kind=mode==='daily'?kinds[index]:kindChoice,completed=Object.values(saved.days).filter(d=>d.complete).length;
+    const level=mode==='daily'?Math.min(12,3+completed):Math.min(12,index+1);
+    const seed=hash((mode==='daily'?today():'free')+':'+index+':'+kind+':v3');
+    return kind==='path'?pathPuzzle(seed,level):kind==='sum'?sumPuzzle(seed,level):memoryPuzzle(seed,level);
+  }
+  function difficulty(p){return p.level<=2?'EINSTIEG':p.level<=5?'FOKUS':p.level<=8?'KNIFFLIG':'EXPERTE';}
   function startDaily(){mode='daily';index=saved.days[today()]?.step||0;if(index>=3){result(true);return;}load();}
   function startFree(kind){mode='free';kindChoice=kind;index=saved.freeModes[kind]||0;load();}
   function load(){
-    run++;busy=false;puzzle=make();stats={hints:0,errors:0,resets:0,swaps:0,start:Date.now()};
+    run++;busy=false;puzzle=make();stats={hints:0,errors:0,resets:0,swaps:0,start:0};
     $('kind').textContent=(mode==='daily'?String(index+1).padStart(2,'0')+' / ':'')+labels[puzzle.type].toUpperCase();
     $('title').textContent=titles[puzzle.type];
-    $('instruction').textContent=puzzle.type==='path'?'Verbinde die Zahlen der Reihe nach. Am Ende muss jedes helle Feld Teil der Linie sein.':puzzle.type==='sum'?'Tausche Zahlen durch Antippen. Erfülle alle sechs Summen am Rand.':'Merke dir die Folge. Tippe die Felder danach '+(puzzle.reverse?'rückwärts.':'in derselben Reihenfolge.');
+    $('instruction').textContent=puzzle.type==='path'?'Verbinde die Zahlen der Reihe nach. Am Ende muss jedes helle Feld Teil der Linie sein.':puzzle.type==='sum'?'Tippe eine Zahl für ihre Summen. Tippe eine zweite zum Tauschen. Richtige Randzahlen werden grün.':'Merke dir die Folge. Tippe die Felder danach '+(puzzle.reverse?'rückwärts.':'in derselben Reihenfolge.');
     $('round-label').textContent=mode==='daily'?'TAGESRUNDE · '+(index+1)+' / 3':labels[puzzle.type].toUpperCase()+' · LEVEL '+(index+1);
-    $('twist').textContent=puzzle.type==='memory'&&puzzle.reverse?'↶ RÜCKWÄRTS':puzzle.type==='path'?puzzle.route.length+' FELDER FÜLLEN':puzzle.type==='sum'?'6 SUMMEN':'';
-    $('progress').innerHTML=mode==='daily'?Array.from({length:3},(_,i)=>'<i class="'+(i<=index?'active':'')+'"></i>').join(''):'<span>LEVEL '+(index+1)+' · '+(saved.records[puzzle.type]?'PERSÖNLICHER REKORD '+saved.records[puzzle.type].stars+' ★':'DEIN ERSTER VERSUCH')+'</span>';
+    $('twist').textContent=difficulty(puzzle)+' · '+(puzzle.type==='memory'?(puzzle.reverse?'↶ RÜCKWÄRTS · ':'VORWÄRTS · ')+puzzle.sequence.length+' SIGNALE':puzzle.type==='path'?puzzle.n+'×'+puzzle.n+' · '+puzzle.route.length+' FELDER':'6 SUMMEN');
+    const record=saved.records[puzzle.type];
+    $('progress').innerHTML=mode==='daily'?Array.from({length:3},(_,i)=>'<i class="'+(i<=index?'active':'')+'"></i>').join(''):'<span>LEVEL '+(index+1)+(record?.stage?' · REKORD LEVEL '+record.stage:' · DEIN NÄCHSTES ZIEL')+'</span>';
     render();show('game');
   }
   function board(n,extra=''){const el=document.createElement('div');el.className='board '+extra;el.style.gridTemplateColumns='repeat('+n+',1fr)';el.style.gridTemplateRows='repeat('+n+',1fr)';return el;}
@@ -93,7 +104,7 @@
   function updatePath(){const p=puzzle;$('play-area').querySelectorAll('.cell').forEach((c,i)=>c.classList.toggle('on',p.trace.includes(i)));$('play-area').querySelector('polyline').setAttribute('points',p.trace.map(i=>(i%p.n*10+5)+','+(Math.floor(i/p.n)*10+5)).join(' '));}
   function stepPath(i){
     const p=puzzle;if(p.type!=='path'||busy||p.walls.has(i))return;const t=p.trace,last=t[t.length-1];
-    if(!t.length){if(p.anchors.get(i)!==1){$('feedback').textContent='Beginne bei der 1.';return;}}
+    if(!t.length){if(p.anchors.get(i)!==1){$('feedback').textContent='Beginne bei der 1.';return;}if(!stats.start)stats.start=Date.now();}
     else {if(i===last)return;if(t.length>1&&i===t[t.length-2]){t.pop();updatePath();$('feedback').textContent=t.length+' / '+p.route.length+' helle Felder verbunden';return;}
       if(!neighbors(last,p.n).includes(i)||t.includes(i))return;
       const next=Math.max(0,...t.map(x=>p.anchors.get(x)||0))+1;
@@ -108,12 +119,14 @@
   const solvedCount=p=>p.rows.filter((v,y)=>v===rowSum(p,y)).length+p.cols.filter((v,x)=>v===colSum(p,x)).length;
   function renderSum(){
     const p=puzzle,layout=document.createElement('div');layout.className='sum-layout';const b=board(3,'sum-board');
-    p.tiles.forEach((v,i)=>{const c=document.createElement('button');const rowDone=rowSum(p,Math.floor(i/3))===p.rows[Math.floor(i/3)],colDone=colSum(p,i%3)===p.cols[i%3];c.className='cell'+(p.selected===i?' selected':'')+(rowDone?' row-done':'')+(colDone?' col-done':'')+(p.hintCells?.includes(i)?' hint-cell':'');c.textContent=v;c.setAttribute('aria-label','Feld '+(i+1)+', Zahl '+v);c.onclick=()=>{if(busy)return;if(p.selected===null){p.selected=i;renderSum();return;}if(p.selected===i){p.selected=null;renderSum();return;}[p.tiles[p.selected],p.tiles[i]]=[p.tiles[i],p.tiles[p.selected]];p.selected=null;p.hintCells=null;stats.swaps++;beep(440+solvedCount(p)*30);renderSum();if(solvedCount(p)===6)finish();};b.append(c);});
+    p.tiles.forEach((v,i)=>{const c=document.createElement('button');c.className='cell'+(p.selected===i?' selected':'')+(p.hintCells?.includes(i)?' hint-cell':'');c.textContent=v;c.setAttribute('aria-label','Feld '+(i+1)+', Zahl '+v);c.onclick=()=>{if(busy)return;if(!stats.start)stats.start=Date.now();if(p.selected===null){p.selected=i;renderSum();return;}if(p.selected===i){p.selected=null;renderSum();return;}[p.tiles[p.selected],p.tiles[i]]=[p.tiles[i],p.tiles[p.selected]];p.selected=null;p.hintCells=null;stats.swaps++;beep(440+solvedCount(p)*30);renderSum();if(solvedCount(p)===6)finish();};b.append(c);});
     layout.append(b);const right=document.createElement('div');right.className='sum-targets right';right.style.gridTemplateRows='repeat(3,1fr)';
-    p.rows.forEach((target,y)=>{const d=document.createElement('span'),current=rowSum(p,y);d.className='target'+(current===target?' done':'');d.innerHTML='<small>'+current+'</small><b>'+target+'</b>';d.setAttribute('aria-label','Zeile '+(y+1)+': '+current+' von '+target);right.append(d);});
+    p.rows.forEach((target,y)=>{const d=document.createElement('span'),current=rowSum(p,y);d.className='target'+(current===target?' done':'');d.innerHTML='<b>'+target+'</b>'+(current===target?'<em>✓</em>':'');d.setAttribute('aria-label','Zeile '+(y+1)+': '+current+' von '+target);right.append(d);});
     layout.append(right);const bottom=document.createElement('div');bottom.className='sum-targets bottom';bottom.style.gridTemplateColumns='repeat(3,1fr)';
-    p.cols.forEach((target,x)=>{const d=document.createElement('span'),current=colSum(p,x);d.className='target'+(current===target?' done':'');d.innerHTML='<small>'+current+'</small><b>'+target+'</b>';d.setAttribute('aria-label','Spalte '+(x+1)+': '+current+' von '+target);bottom.append(d);});
-    layout.append(bottom);$('play-area').replaceChildren(layout);$('feedback').textContent=solvedCount(p)+' / 6 Summen · '+stats.swaps+' Tauschzüge'+(p.selected===null?'':' · Zweite Zahl wählen');
+    p.cols.forEach((target,x)=>{const d=document.createElement('span'),current=colSum(p,x);d.className='target'+(current===target?' done':'');d.innerHTML='<b>'+target+'</b>'+(current===target?'<em>✓</em>':'');d.setAttribute('aria-label','Spalte '+(x+1)+': '+current+' von '+target);bottom.append(d);});
+    layout.append(bottom);$('play-area').replaceChildren(layout);
+    if(p.selected===null)$('feedback').textContent=solvedCount(p)+' / 6 Summen · '+stats.swaps+' Züge · Zahl antippen';
+    else {const y=Math.floor(p.selected/3),x=p.selected%3;$('feedback').innerHTML='<span class="sum-readout">Zeile '+(y+1)+': <b>'+rowSum(p,y)+'</b> von '+p.rows[y]+'</span><span class="sum-readout">Spalte '+(x+1)+': <b>'+colSum(p,x)+'</b> von '+p.cols[x]+'</span>';}
   }
   function renderMemory(){
     const p=puzzle,b=board(p.n,'memory-board');
@@ -122,16 +135,17 @@
     if(p.phase==='ready'||p.phase==='failed'){const btn=document.createElement('button');btn.className='memory-start';btn.innerHTML='<span class="mini-mark">✳</span> '+(p.phase==='failed'?'Noch einmal ansehen':'Folge zeigen')+' <span>→</span>';btn.onclick=playMemory;$('play-area').append(btn);}
   }
   async function playMemory(){
-    const p=puzzle,ticket=run;if(p.phase!=='ready'&&p.phase!=='failed')return;p.answer=0;p.phase='showing';renderMemory();$('feedback').textContent='Schau genau hin …';
+    const p=puzzle,ticket=run;if(p.phase!=='ready'&&p.phase!=='failed')return;if(!stats.start)stats.start=Date.now();p.answer=0;p.phase='showing';renderMemory();$('feedback').textContent='Schau genau hin …';
     const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));await pause(420);
     for(const i of p.sequence){if(ticket!==run)return;const cells=$('play-area').querySelectorAll('.cell');cells[i].classList.add('lit');beep(450);await pause(p.level<3?620:510);if(ticket!==run)return;cells[i].classList.remove('lit');await pause(190);}
     if(ticket!==run)return;p.phase='input';$('feedback').textContent=p.reverse?'Jetzt rückwärts · 0 / '+p.sequence.length:'Jetzt du · 0 / '+p.sequence.length;
   }
   function finish(){
     if(busy)return;busy=true;run++;
-    const seconds=Math.max(1,Math.round((Date.now()-stats.start)/1000)),penalty=stats.hints+stats.errors+stats.resets;
-    const stars=Math.max(1,3-Math.min(2,penalty)),kind=puzzle.type,score={stars,seconds,swaps:stats.swaps,hints:stats.hints,errors:stats.errors};
-    saved.stars+=stars;const old=saved.records[kind];if(!old||stars>old.stars||(stars===old.stars&&seconds<old.seconds))saved.records[kind]=score;
+    const seconds=Math.max(1,Math.round((Date.now()-(stats.start||Date.now()))/1000)),penalty=stats.hints+stats.errors+stats.resets;
+    const stars=penalty===0?3:penalty<=2?2:1,kind=puzzle.type,score={stars,seconds,swaps:stats.swaps,hints:stats.hints,errors:stats.errors,level:puzzle.level};
+    saved.stars+=stars;
+    if(mode==='free'){const old=saved.records[kind];if(!old||index+1>(old.stage||0)||(index+1===old.stage&&(stars>old.stars||(stars===old.stars&&seconds<old.seconds))))saved.records[kind]={...score,stage:index+1};}
     if(mode==='daily'){const day=saved.days[today()]||{step:0,complete:false};day.step=Math.max(day.step,index+1);day.complete=day.step>=3;day.scores ||= {};day.scores[kind]=score;saved.days[today()]=day;}
     else saved.freeModes[kind]=Math.max(saved.freeModes[kind]||0,index+1);
     persist();beep(760);setTimeout(()=>result(false,score),330);
@@ -141,7 +155,7 @@
     $('result-title').innerHTML=done?'Heute<br><em>geschafft.</em>':'Gut<br><em>gedacht.</em>';
     $('result-copy').textContent=done?'Deine Tagesrunde ist vollständig. Morgen warten drei neue Rätsel.':'Noch eine Runde? Das nächste Level wartet schon.';
     $('result-score').innerHTML=already?'':('<strong>'+ '★'.repeat(score.stars)+'☆'.repeat(3-score.stars)+'</strong><span>'+score.seconds+' SEKUNDEN'+(puzzle?.type==='sum'?' · '+score.swaps+' ZÜGE':'')+'</span>');
-    $('result-detail').textContent=already?'':score.stars===3?'Perfekt gelöst · ohne Fehler, Hinweis oder Neustart':score.stars===2?'Gut gelöst · ein kleiner Umweg':'Geschafft · morgen geht noch mehr';
+    $('result-detail').textContent=already?'':score.stars===3?'Perfekt · ohne Hilfe oder Fehler':score.stars===2?'Stark · trotz kleiner Umwege':'Geschafft · probiere das nächste Level';
     $('next-label').textContent=done?'Freies Training':mode==='daily'?'Nächstes Rätsel':'Nächstes Level';show('result');
   }
   function reset(){if(!puzzle||busy)return;run++;stats.resets++;if(puzzle.type==='path'){puzzle.trace=[];renderPath();}else if(puzzle.type==='sum'){puzzle.tiles=puzzle.initial.slice();puzzle.selected=null;puzzle.hintCells=null;stats.swaps=0;renderSum();}else{puzzle.answer=0;puzzle.phase='ready';renderMemory();$('feedback').textContent='Bereit? Starte die Folge.';}}

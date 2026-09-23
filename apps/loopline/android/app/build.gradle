@@ -2,7 +2,7 @@ plugins { id 'com.android.application' }
 android {
     namespace 'com.inchat.loopline'
     compileSdk 35
-    defaultConfig { applicationId 'com.inchat.loopline'; minSdk 26; targetSdk 35; versionCode 3; versionName '1.1.1' }
+    defaultConfig { applicationId 'com.inchat.loopline'; minSdk 26; targetSdk 35; versionCode 4; versionName '1.2.0' }
     signingConfigs {
         playtest {
             storeFile file('../playtest.jks')
