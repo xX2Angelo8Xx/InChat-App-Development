@@ -1,0 +1,3 @@
+Local Media 0.1.0: standalone Android MP3/MP4 download app. Paste/share a YouTube link, select MP3 or MP4, download and open the saved file under Downloads/Local Media. Includes Python, yt-dlp 2026.08.19, QuickJS/EJS and FFmpeg; no account or separate runtime setup.
+
+Playtest build with a public test signing key. Android 10+, ARM64 and x86_64. Physical device acceptance and live YouTube download remain to be confirmed by the user. CI validates compilation, lint, unit tests, Android 16 offline native runtime and packaging before publication. Source and dependency notices accompany this release.
