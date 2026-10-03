@@ -62,6 +62,7 @@ class OfflineRuntimeTest {
             val mp4 = File(output, "test.mp4")
             ffmpeg(listOf("-f", "lavfi", "-i", "color=size=64x64:rate=10", "-f", "lavfi", "-i", "sine=frequency=440", "-t", "0.3", "-c:v", "mpeg4", "-c:a", "aac", mp4.absolutePath))
             assertTrue(mp4.length() > 500)
+            MediaValidation.verify(mp4)
             val saved = MediaFiles.publish(context, mp3)
             assertNotNull(context.contentResolver.openInputStream(android.net.Uri.parse(saved.uri))?.use { assertTrue(it.read() >= 0) })
             context.contentResolver.delete(android.net.Uri.parse(saved.uri), null, null)

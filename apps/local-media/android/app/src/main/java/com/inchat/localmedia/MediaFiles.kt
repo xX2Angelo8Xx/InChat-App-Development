@@ -12,6 +12,7 @@ data class SavedMedia(val name: String, val uri: String, val mime: String)
 
 object MediaFiles {
     fun publish(context: Context, source: File): SavedMedia {
+        MediaValidation.verify(source)
         val mime = if (source.extension == "mp3") "audio/mpeg" else "video/mp4"
         val values = ContentValues().apply {
             put(MediaStore.Downloads.DISPLAY_NAME, source.name)
