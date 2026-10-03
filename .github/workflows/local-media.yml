@@ -50,7 +50,9 @@ jobs:
           working-directory: apps/local-media/android
           script: |
             gradle --no-daemon :app:connectedDebugAndroidTest
-            adb pull '/sdcard/Android/data/com.inchat.localmedia/files/ui-preview.png' ui-preview.png
+            adb install -r app/build/outputs/apk/release/app-release.apk
+            adb shell am start -W -n com.inchat.localmedia/.MainActivity
+            adb exec-out screencap -p > ui-preview.png
       - name: Inspect signed APK
         run: |
           set -euo pipefail
