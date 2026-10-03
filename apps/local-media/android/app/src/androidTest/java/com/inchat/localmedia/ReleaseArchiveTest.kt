@@ -43,7 +43,7 @@ class ReleaseArchiveTest {
             assertEquals("b3f623aefee6270bdd08f22ffeb43ebc513e5eea049c645eca6d27e59048f2f9", sha256)
             val legacy = pm.getPackageArchiveInfo(release.absolutePath, PackageManager.GET_SIGNATURES)
             assertNotNull("Legacy signature reader could not parse the release archive", legacy)
-            assertArrayEquals(cert, requireNotNull(legacy).signatures.single().toByteArray())
+            assertArrayEquals(cert, requireNotNull(requireNotNull(legacy).signatures).single().toByteArray())
         } finally {
             release.delete()
         }
