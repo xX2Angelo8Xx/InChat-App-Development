@@ -25,14 +25,23 @@ object DownloadOptions {
         return "https://www.youtube.com/watch?v=$id"
     }
 
-    fun arguments(mp3: Boolean, quality: Int, directory: String): List<String> {
-        require(quality in setOf(360, 720, 1080))
-        val options = mutableListOf("--ignore-config", "--no-playlist", "--no-mtime", "--newline",
+    fun trackArguments(formatId: String, directory: String): List<String> {
+        require(Regex("[A-Za-z0-9_.-]{1,100}").matches(formatId)) { "Ungültige Formatauswahl. Bitte erneut suchen." }
+        return listOf("--ignore-config", "--no-playlist", "--no-mtime", "--newline", "--fixup", "never",
             "--socket-timeout", "30", "--retries", "3", "--fragment-retries", "3",
-            "--restrict-filenames", "--trim-filenames", "140", "-o", "$directory/%(title).120B [%(id)s].%(ext)s")
-        if (mp3) options += listOf("-f", "bestaudio/best", "-x", "--audio-format", "mp3", "--audio-quality", "192K")
-        else options += listOf("-f", "bestvideo[ext=mp4][vcodec^=avc1][height<=$quality]+bestaudio[ext=m4a]/best[ext=mp4][height<=$quality]",
-            "--merge-output-format", "mp4", "--remux-video", "mp4")
-        return options
+            "-f", formatId, "-o", "$directory/source.%(ext)s")
+    }
+
+    fun safeTitle(title: String): String {
+        val cleaned = title.replace(Regex("[\\\\/:*?\"<>|\\p{Cntrl}]"), "_").trim().trim('.')
+        val output = StringBuilder()
+        var bytes = 0
+        cleaned.codePoints().toArray().forEach { cp ->
+            val character = String(Character.toChars(cp))
+            if (bytes + character.toByteArray(Charsets.UTF_8).size <= 160) {
+                output.append(character); bytes += character.toByteArray(Charsets.UTF_8).size
+            }
+        }
+        return output.toString().ifBlank { "Video" }
     }
 }

@@ -13,30 +13,66 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class OfflineRuntimeTest {
-    @Test fun interfaceAcceptsSharedLinkWithoutAutomaticDownload() {
+    @Test fun previewPrecedesFormatSelectionAndChangingLinkInvalidatesIt() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val intent = android.content.Intent(instrumentation.targetContext, MainActivity::class.java)
             .setAction(android.content.Intent.ACTION_SEND).putExtra(android.content.Intent.EXTRA_TEXT, "https://youtu.be/BaW_jenozKc")
             .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        VideoSearch.clear()
         val activity = instrumentation.startActivitySync(intent) as MainActivity
         instrumentation.waitForIdleSync()
         fun descendants(view: android.view.View): List<android.view.View> = if (view is android.view.ViewGroup)
             listOf(view) + (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) } else listOf(view)
+        val bitmap = android.graphics.Bitmap.createBitmap(640, 360, android.graphics.Bitmap.Config.ARGB_8888)
+        android.graphics.Canvas(bitmap).apply {
+            drawColor(android.graphics.Color.rgb(25, 65, 55))
+            drawText("VIDEO PREVIEW", 45f, 185f, android.graphics.Paint().apply {
+                color = android.graphics.Color.WHITE; textSize = 48f; isAntiAlias = true
+            })
+        }
         try {
             instrumentation.runOnMainSync {
                 val views = descendants(activity.window.decorView)
                 assertEquals("https://youtu.be/BaW_jenozKc", views.filterIsInstance<android.widget.EditText>().single().text.toString())
-                assertFalse(DownloadState.current.busy)
-                val radio = views.filterIsInstance<android.widget.RadioButton>().first { it.text.toString().startsWith("MP4") }
-                radio.performClick()
-                assertEquals(android.view.View.VISIBLE, views.filterIsInstance<android.widget.Spinner>().single().visibility)
+                assertFalse(DownloadState.current.busy); assertFalse(VideoSearch.current.busy)
+                assertFalse(views.filterIsInstance<android.widget.Button>().first { it.text == "Herunterladen" }.isEnabled)
+                assertFalse(views.filterIsInstance<android.widget.RadioButton>().first { it.text.toString().startsWith("MP4") }.isShown)
+            }
+            val fixture = instrumentation.context.assets.open("catalog-fixture.json").bufferedReader().use { it.readText() }
+            val url = DownloadOptions.normalize("https://youtu.be/BaW_jenozKc")
+            val video = VideoCatalog.parse(url, fixture)
+            VideoSearch.publish(SearchState(query = url, details = video, thumbnail = bitmap))
+            instrumentation.waitForIdleSync()
+            instrumentation.runOnMainSync {
+                val views = descendants(activity.window.decorView)
+                assertTrue(views.filterIsInstance<android.widget.TextView>().any { it.text == video.title && it.isShown })
+                assertNotNull(views.filterIsInstance<android.widget.ImageView>().single().drawable)
+                views.filterIsInstance<android.widget.RadioButton>().first { it.text.toString().startsWith("MP4") }.performClick()
+            }
+            instrumentation.waitForIdleSync()
+            instrumentation.runOnMainSync {
+                val views = descendants(activity.window.decorView)
+                val spinner = views.filterIsInstance<android.widget.Spinner>().single()
+                assertEquals(listOf("720p", "1080p · 60 fps"), (0 until spinner.count).map { spinner.getItemAtPosition(it) })
+                spinner.setSelection(1)
+                assertTrue(views.filterIsInstance<android.widget.Button>().first { it.text == "Herunterladen" }.isEnabled)
             }
             instrumentation.waitForIdleSync()
             val screenshot = instrumentation.uiAutomation.takeScreenshot()
             assertNotNull(screenshot)
             File(activity.getExternalFilesDir(null), "ui-preview.png").outputStream().use { screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
             screenshot.recycle()
-        } finally { instrumentation.runOnMainSync { activity.finish() } }
+            instrumentation.runOnMainSync {
+                val views = descendants(activity.window.decorView)
+                views.filterIsInstance<android.widget.EditText>().single().setText("https://youtu.be/OETnuwwsv9U")
+                assertFalse(views.filterIsInstance<android.widget.Button>().first { it.text == "Herunterladen" }.isEnabled)
+                assertFalse(views.filterIsInstance<android.widget.ImageView>().single().isShown)
+            }
+        } finally {
+            instrumentation.runOnMainSync { activity.finish() }
+            VideoSearch.clear()
+            bitmap.recycle()
+        }
     }
 
     @Test fun packagedRuntimeCreatesRealMp3AndMp4WithoutNetwork() {

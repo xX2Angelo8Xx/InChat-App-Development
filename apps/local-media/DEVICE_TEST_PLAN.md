@@ -17,3 +17,15 @@ Target: Galaxy A56 5G / Android 16 / ARM64.
 CI checks real Python/yt-dlp/QuickJS startup and synthetic local FFmpeg MP3/MP4 creation on an x86_64 Android 16 emulator plus MediaStore publication. It does not prove live YouTube availability or ARM64 runtime behavior.
 
 CI also reads the built release archive through PackageManager using both signature APIs, verifies version/certificate and loads name/icon. This still does not emulate Samsung Package Installer.
+
+## 0.2.0 acceptance
+
+1. Update the installed app without uninstalling (same signing identity); cold start.
+2. Paste/share a link: format selection and download must wait for Suchen. Search shows matching title and thumbnail; image failure is nonfatal.
+3. Inspect MP3 audio-source choices and MP4 available H.264 resolutions/frame rates. Formats not provided by the source must not be listed; MP3 output is 192 kbit/s.
+4. Change the link: previous preview must disappear and download be unavailable until the new search succeeds. Rotate during search and after preview; selection/UI must remain coherent. Force-stop/relaunch requires re-search.
+5. Repeat the originally failing live URL as MP3 (OETnuwwsv9U), then MP4 including separate video/audio sources. Verify playback and saved filename.
+6. Cancel a search, each track download and FFmpeg conversion; retry. Background/lock during download; notify permission denied/granted. Disconnect network during metadata/track download.
+7. Force-stop during transfer/conversion/publication, then restart/retry: no duplicate worker or pending output, durable orphan work recovered by next job.
+
+CI covers metadata fixtures, real bundled engine file-URL download and FFmpeg MP3/MP4 pipeline plus MediaStore, populated preview UI and invalidation, and final-release parsing/signing/install checks. It does not establish why the original WebM was missing or prove live YouTube/ARM64 acceptance.

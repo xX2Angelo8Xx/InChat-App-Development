@@ -30,8 +30,8 @@ class ReleaseArchiveTest {
             assertNotNull("Android could not parse the release archive", modern)
             val info = requireNotNull(modern)
             assertEquals("com.inchat.localmedia", info.packageName)
-            assertEquals("0.1.1", info.versionName)
-            assertEquals(2L, info.longVersionCode)
+            assertEquals("0.2.0", info.versionName)
+            assertEquals(3L, info.longVersionCode)
             val application = requireNotNull(info.applicationInfo)
             application.sourceDir = release.absolutePath
             application.publicSourceDir = release.absolutePath

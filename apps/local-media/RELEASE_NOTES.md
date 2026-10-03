@@ -1,7 +1,7 @@
-Local Media 0.1.1 — installer compatibility trial
+Local Media 0.2.0 — search, preview and source quality
 
-Adds v1/JAR signing alongside v2 with the existing playtest certificate. Tests the final release APK through Android PackageManager (name, icon, version and both signature APIs), in addition to ADB install, offline runtime, lint, unit tests and package inspection.
+Paste/share a YouTube link, press Suchen, inspect title and thumbnail, then choose MP3/MP4 and actual available audio-source quality or H.264 MP4 resolution. A changed link invalidates the old preview. MP3 is encoded locally at 192 kbit/s; selecting a source does not upscale its quality.
 
-The 0.1.0 APK fails before install confirmation on Galaxy A56 / Android 16 despite matching the published file exactly. This release tests one signing change; the root cause is not established and phone installation is not yet confirmed. SDK level, native ABIs, bundled engines and app behavior remain unchanged.
+Replaces the failing yt-dlp audio post-processing path with separate track downloads and explicit bundled FFmpeg conversion/muxing. Durable per-job working directories and distinct source/output files keep inputs intact until publication. Completed MP3/MP4 headers are validated before saving to Downloads/Local Media. Cancellation covers extraction/download and FFmpeg; error details can be copied.
 
-Standalone local MP3/MP4 downloader. Android 10+, ARM64 and x86_64. Public playtest key; physical device and live YouTube acceptance pending.
+Same package/playtest certificate, Android 10+, ARM64/x86_64, v1+v2 signing, versionCode 3. Compilation/lint/unit/Android offline runtime, populated preview, format parsing, end-to-end WebM→MP3→MediaStore and MP4 muxing, final release parsing/install/signing/package checks run before publication. Phone/live YouTube retest remains pending. The former installation issue was reported resolved after a phone reboot; its exact cause was not established.

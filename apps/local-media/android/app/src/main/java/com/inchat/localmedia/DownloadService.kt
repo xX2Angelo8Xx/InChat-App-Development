@@ -12,6 +12,7 @@ import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import java.io.File
+import java.util.UUID
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -22,6 +23,7 @@ class DownloadService : Service() {
     private var wake: PowerManager.WakeLock? = null
     private var processId = ""
     private var lastNotification = 0L
+    @Volatile private var media: NativeMedia? = null
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onCreate() {
         super.onCreate()
@@ -29,54 +31,67 @@ class DownloadService : Service() {
             NotificationChannel("downloads", "Downloads", NotificationManager.IMPORTANCE_LOW))
     }
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.action == "cancel") { cancel(); return START_NOT_STICKY }
+        if (intent?.action == "cancel") { cancel(); if (!active.get()) stopSelf(); return START_NOT_STICKY }
         if (!active.compareAndSet(false, true)) return START_NOT_STICKY
         if (!DownloadState.current.busy) DownloadState.begin()
         startForeground(1, notification("Download wird vorbereitet …"))
         cancelled.set(false)
-        processId = "download-$startId"
+        processId = "download-${UUID.randomUUID()}"
         val url = intent?.getStringExtra("url").orEmpty()
         val mp3 = intent?.getBooleanExtra("mp3", true) ?: true
-        val quality = intent?.getIntExtra("quality", 720) ?: 720
+        val sourceId = intent?.getStringExtra("sourceId").orEmpty()
+        val audioId = intent?.getStringExtra("audioId").orEmpty()
+        val title = intent?.getStringExtra("title").orEmpty()
         wake = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LocalMedia:Download").also { it.acquire(2 * 60 * 60 * 1000L) }
-        executor.execute { download(url, mp3, quality, startId) }
+        executor.execute { synchronized(EngineSession.lock) { download(url, mp3, sourceId, audioId, title, startId) } }
         return START_NOT_STICKY
     }
-    private fun download(input: String, mp3: Boolean, quality: Int, startId: Int) {
-        val directory = File(cacheDir, "download-job")
+    private fun download(input: String, mp3: Boolean, sourceId: String, audioId: String, title: String, startId: Int) {
+        val jobs = File(noBackupFilesDir, "download-jobs")
+        val directory = File(jobs, UUID.randomUUID().toString())
         var result = JobState(message = "Download beendet.")
         try {
             val url = DownloadOptions.normalize(input)
-            directory.deleteRecursively(); check(directory.mkdirs())
+            // Recover orphaned work after process death; this service owns the engine lock.
+            jobs.listFiles()?.forEach { it.deleteRecursively() }
+            check(directory.mkdirs()) { "Arbeitsverzeichnis konnte nicht erstellt werden." }
             MediaFiles.recover(this)
             update("Lokale Komponenten werden geladen …")
             YoutubeDL.init(this); FFmpeg.init(this)
             checkNotCancelled()
-            val request = YoutubeDLRequest(url).addCommands(DownloadOptions.arguments(mp3, quality, directory.absolutePath))
-            update("Video wird abgerufen …")
-            var converting = false
-            YoutubeDL.execute(request, processId, false) { progress, eta, line ->
-                if (cancelled.get()) YoutubeDL.destroyProcessById(processId)
-                else {
-                    converting = converting || line.contains("[ExtractAudio]") || line.contains("[Merger]") || line.contains("[VideoRemuxer]")
-                    val percent = progress.toInt().coerceIn(0, 100)
-                    val message = if (converting) "${if (mp3) "MP3 wird erstellt" else "Video und Audio werden zusammengeführt"} …"
-                        else if (progress < 0) "Videoinformationen werden geladen …"
-                        else "Download: $percent %${if (eta > 0) " · ca. $eta s" else ""}"
-                    update(message, if (converting || progress < 0) -1 else percent)
+            fun track(formatId: String, folder: String, label: String): File {
+                val destination = File(directory, folder)
+                check(destination.mkdirs())
+                val request = YoutubeDLRequest(url).addCommands(DownloadOptions.trackArguments(formatId, destination.absolutePath))
+                update("$label wird geladen …")
+                YoutubeDL.execute(request, processId, false) { progress, eta, _ ->
+                    if (cancelled.get()) YoutubeDL.destroyProcessById(processId)
+                    else update("$label: ${progress.toInt().coerceIn(0, 100)} %${if (eta > 0) " · ca. $eta s" else ""}",
+                        if (progress < 0) -1 else progress.toInt().coerceIn(0, 100))
                 }
+                checkNotCancelled()
+                val complete = destination.listFiles()?.filter {
+                    it.name.startsWith("source.") && it.extension !in listOf("part", "ytdl", "temp") && it.isFile && it.length() > 0
+                }.orEmpty()
+                check(complete.size == 1) { "Keine vollständige Quelldatei erhalten. Bitte erneut suchen." }
+                return complete.single()
             }
+            val source = track(sourceId, "source", if (mp3) "Audio" else "Video")
+            val audio = if (!mp3 && audioId.isNotBlank()) track(audioId, "audio", "Audiospur") else null
+            val id = url.substringAfter("v=")
+            val target = File(directory, "${DownloadOptions.safeTitle(title)} [$id].${if (mp3) "mp3" else "mp4"}")
+            update(if (mp3) "MP3 wird erstellt …" else "MP4 wird erstellt …")
+            media = NativeMedia(this, cancelled)
+            requireNotNull(media).convert(source, audio, target, mp3)
             checkNotCancelled()
-            val extension = if (mp3) "mp3" else "mp4"
-            val files = directory.listFiles()?.filter { it.extension == extension && it.length() > 0 }.orEmpty()
-            check(files.size == 1) { "Keine vollständige $extension-Datei erzeugt." }
             update("Datei wird im Download-Ordner gespeichert …")
-            val file = MediaFiles.publish(this, files.single())
+            val file = MediaFiles.publish(this, target)
             result = JobState(message = "Gespeichert: ${file.name}")
         } catch (e: Exception) {
             result = if (cancelled.get()) JobState(message = "Download abgebrochen.")
-                else JobState(message = "Download fehlgeschlagen.", error = e.message.orEmpty().takeLast(5000))
+                else JobState(message = "Download fehlgeschlagen. Bitte bei geänderten Formaten erneut suchen.", error = e.message.orEmpty().takeLast(6000))
         } finally {
+            media = null
             directory.deleteRecursively()
             wake?.let { if (it.isHeld) it.release() }
             active.set(false)
@@ -105,6 +120,7 @@ class DownloadService : Service() {
     }
     private fun cancel() {
         cancelled.set(true)
+        media?.cancel()
         // Cancellation may arrive while native packages are still being initialized.
         if (processId.isNotEmpty()) YoutubeDL.destroyProcessById(processId)
     }
