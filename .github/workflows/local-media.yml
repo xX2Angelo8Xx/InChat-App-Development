@@ -63,7 +63,9 @@ jobs:
           grep -F "package: name='com.inchat.localmedia' versionCode='2' versionName='0.1.1'" /tmp/local-media-badging.txt
           grep -F "targetSdkVersion:'36'" /tmp/local-media-badging.txt
           "$TOOLS/apksigner" verify --verbose --print-certs "$APK" > /tmp/local-media-signing.txt
-          grep -F 'Verified using v1 scheme (JAR signing): true' /tmp/local-media-signing.txt
+          # Default verification skips v1 for minSdk 29; explicitly verify the JAR scheme too.
+          "$TOOLS/apksigner" verify --verbose --min-sdk-version 23 "$APK" > /tmp/local-media-v1-signing.txt
+          grep -F 'Verified using v1 scheme (JAR signing): true' /tmp/local-media-v1-signing.txt
           grep -F 'Verified using v2 scheme (APK Signature Scheme v2): true' /tmp/local-media-signing.txt
           "$TOOLS/zipalign" -c -P 16 4 "$APK"
           EXPECTED=$(keytool -list -v -keystore apps/local-media/android/playtest.jks -storepass localmedia-test -alias localmedia-playtest | awk '/SHA256:/{print $2}' | tr -d ':' | tr '[:upper:]' '[:lower:]')
@@ -98,3 +100,4 @@ jobs:
             apps/local-media/android/app/build/outputs/androidTest-results/
             /tmp/local-media-badging.txt
             /tmp/local-media-signing.txt
+            /tmp/local-media-v1-signing.txt
