@@ -28,4 +28,14 @@ class VideoCatalogTest {
         try { VideoCatalog.parse("https://www.youtube.com/watch?v=BaW_jenozKc", data.toString()); fail() }
         catch (_: IllegalArgumentException) { }
     }
+    @Test fun originalAudioIsPreferredAndDifferentLanguagesRemainVisible() {
+        val data = JSONObject(fixture())
+        data.getJSONArray("formats").getJSONObject(0).put("language", "en").put("language_preference", 10)
+        data.getJSONArray("formats").getJSONObject(1).put("language", "de").put("language_preference", -1).put("abr", 300)
+        val video = VideoCatalog.parse("https://www.youtube.com/watch?v=BaW_jenozKc", data.toString())
+        assertEquals("140", video.audio.first().id)
+        assertTrue(video.audio.first().label.contains("Englisch"))
+        assertTrue(video.audio.last().label.contains("Deutsch"))
+    }
+
 }
