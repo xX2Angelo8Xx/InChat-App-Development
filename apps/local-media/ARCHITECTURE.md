@@ -1,0 +1,17 @@
+# Architecture
+
+Native Kotlin Activity, process-local metadata/search state with a single executor, and foreground dataSync DownloadService with a single worker. No WebView or backend. EngineSession serializes native setup and extraction/download subprocesses across these workers.
+
+Search: validated individual YouTube URL → bundled yt-dlp --dump-single-json/--skip-download → bounded retained title/duration/thumbnail URL and explicit supported format choices → preview → source selection. Nothing downloads automatically from pasted/shared links. A changed URL invalidates the preview. Generation tokens discard stale search and thumbnail completions; state survives Activity recreation within the process. Process death loses the preview and requires a new search. A failed thumbnail remains a placeholder, while metadata and download stay usable. Thumbnail HTTP uses HTTPS YouTube image hosts only, validates redirects, bounds response bytes to 2 MiB and decoded dimensions, and sets timeouts.
+
+Download: selected track ID(s) → yt-dlp individual-track download with automatic fixups/audio post-processing disabled → explicit local FFmpeg MP3 conversion or MP4 muxing with H.264 passthrough/AAC audio → signature validation → MediaStore pending row → published Downloads file/history. MP3 source choices show actual codec/bitrate; encoding is fixed to 192 kbit/s and does not improve the source. MP4 choices include only advertised H.264 MP4 streams with audio or an available separate audio source; missing/expired format IDs fail visibly instead of silent quality fallback.
+
+Each job owns a UUID folder under noBackupFilesDir/download-jobs, separate source/audio/output paths, and cleanup in finally. Android cache eviction cannot remove the staging directory. Inputs stay until conversion and publication complete; the old yt-dlp ExtractAudioPP source rename is no longer used. Stale job directories are recovered under the engine lock when the next download starts. NativeMedia owns the FFmpeg process and bounded diagnostic output; cancellation destroys it, while yt-dlp cancellation destroys the extraction/download process. Service holds a bounded two-hour wake lock, handles Android dataSync timeout, has no automatic restart/retry, and releases all state in finally.
+
+MediaStore uses no broad storage permission. File headers must match MP3/MP4 before publication, rejecting HTML returned as media. A failed copy deletes the pending row; the next job removes this app's orphan pending rows. Completed files persist after uninstall. Private history is bounded to 20 entries. No persistent URL logs, credentials or telemetry. Error details can be copied by the user.
+
+URLs use exact approved HTTPS YouTube hosts, no userinfo, single-video ID shapes; playlists are reduced to one video. Format IDs are restricted to a bounded selector-safe character set, and all subprocess arguments are lists without a shell. Output filenames remove directory/control characters and are bounded in UTF-8 bytes. No cookies, accounts, proxies, third-party converters or remote EJS fetching.
+
+Pinned runtime: youtubedl-android/FFmpeg 0.18.1, yt-dlp 2026.08.19 with verified SHA-256 and bundled EJS. Runtime updates require a new APK; no automatic runtime download/update on launch.
+
+Permissions: INTERNET, normal foreground-service/dataSync/wake-lock permissions; optional POST_NOTIFICATIONS at download start. Notification denial does not block processing. No all-files, microphone, location, contacts or account access.

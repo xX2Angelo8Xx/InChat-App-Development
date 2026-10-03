@@ -19,6 +19,8 @@ tooling/
 
 ## Current applications
 
+- `apps/local-media` — standalone Android MP3/MP4 YouTube downloader with on-device extraction and conversion (initial playtest).
+
 - `apps/speech-notes` — native Android, fully local/offline Whisper transcription with streaming and speaker diarization.
 
 See `PROJECT_INSTRUCTIONS.md`, `DEVELOPMENT_PLAYBOOK.md`, and `REPOSITORY_STRATEGY.md` before starting development.

@@ -1,0 +1,5 @@
+.gradle/
+**/build/
+local.properties
+playtest.jks
+app/src/main/res/raw/ytdlp
