@@ -50,7 +50,7 @@ class OfflineRuntimeTest {
         val output = File(context.cacheDir, "runtime-check").apply { mkdirs() }
         fun ffmpeg(arguments: List<String>) {
             val pb = ProcessBuilder(listOf("$native/libffmpeg.so", "-y", "-hide_banner") + arguments).redirectErrorStream(true)
-            pb.environment()["LD_LIBRARY_PATH"] = File(context.noBackupFilesDir, "youtubedl-android/packages/ffmpeg/usr/lib").absolutePath
+            pb.environment()["LD_LIBRARY_PATH"] = listOf("python", "ffmpeg", "aria2c").joinToString(":") { File(context.noBackupFilesDir, "youtubedl-android/packages/$it/usr/lib").absolutePath }
             val process = pb.start()
             val log = process.inputStream.bufferedReader().readText()
             assertTrue(process.waitFor(60, TimeUnit.SECONDS)); assertEquals(log, 0, process.exitValue())
