@@ -62,6 +62,11 @@ class OfflineRuntimeTest {
             assertNotNull(screenshot)
             File(activity.getExternalFilesDir(null), "ui-preview.png").outputStream().use { screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
             screenshot.recycle()
+            // UTP uninstalls the test app afterward; export while its external folder exists.
+            val export = instrumentation.uiAutomation.executeShellCommand(
+                "cp /sdcard/Android/data/com.inchat.localmedia/files/ui-preview.png /data/local/tmp/local-media-preview.png 2>&1")
+            val exportError = android.os.ParcelFileDescriptor.AutoCloseInputStream(export).bufferedReader().use { it.readText() }
+            assertEquals("Could not export the populated preview", "", exportError)
             instrumentation.runOnMainSync {
                 val views = descendants(activity.window.decorView)
                 views.filterIsInstance<android.widget.EditText>().single().setText("https://youtu.be/OETnuwwsv9U")
