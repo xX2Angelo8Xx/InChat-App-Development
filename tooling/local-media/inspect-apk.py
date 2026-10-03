@@ -2,6 +2,9 @@ import sys, zipfile, hashlib, io
 apk = sys.argv[1]
 with zipfile.ZipFile(apk) as z:
     names = set(z.namelist())
+    assert z.testzip() is None, 'APK ZIP CRC failure'
+    assert z.getinfo('resources.arsc').compress_type == zipfile.ZIP_STORED, 'Resource table must be uncompressed'
+    assert 'META-INF/MANIFEST.MF' in names, 'v1 signing manifest is required for the compatibility trial'
     for abi in ('arm64-v8a', 'x86_64'):
         for lib in ('libpython.so', 'libpython.zip.so', 'libqjs.so', 'libffmpeg.so', 'libffmpeg.zip.so'):
             assert f'lib/{abi}/{lib}' in names, (abi, lib)

@@ -11,6 +11,6 @@ A standalone Android app for downloading individual YouTube videos as MP3 or MP4
 
 Internet access to YouTube is necessary. Processing is local, not offline downloading. Restricted, private, DRM-protected or unavailable videos are not bypassed. YouTube changes and server-side restrictions can cause downloads to fail; exact engine errors are visible in the app.
 
-Initial playtest version: 0.1.0 / versionCode 1 / `com.inchat.localmedia`. Engineering validation and actual phone validation are separate.
+Current compatibility trial: 0.1.1 / versionCode 2 / `com.inchat.localmedia`. Engineering validation and actual phone validation are separate.
 
 Read ARCHITECTURE.md, BUILD_AND_RELEASE.md and DEVICE_TEST_PLAN.md.

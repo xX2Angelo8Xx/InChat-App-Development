@@ -49,6 +49,7 @@ jobs:
           disable-animations: true
           working-directory: apps/local-media/android
           script: |
+            adb push app/build/outputs/apk/release/app-release.apk /data/local/tmp/local-media-release.apk
             gradle --no-daemon :app:connectedDebugAndroidTest
             adb install -r app/build/outputs/apk/release/app-release.apk
             adb shell am start -W -n com.inchat.localmedia/.MainActivity
@@ -59,31 +60,34 @@ jobs:
           APK=apps/local-media/android/app/build/outputs/apk/release/app-release.apk
           TOOLS="$ANDROID_HOME/build-tools/36.0.0"
           "$TOOLS/aapt" dump badging "$APK" > /tmp/local-media-badging.txt
-          grep -F "package: name='com.inchat.localmedia' versionCode='1' versionName='0.1.0'" /tmp/local-media-badging.txt
+          grep -F "package: name='com.inchat.localmedia' versionCode='2' versionName='0.1.1'" /tmp/local-media-badging.txt
           grep -F "targetSdkVersion:'36'" /tmp/local-media-badging.txt
           "$TOOLS/apksigner" verify --verbose --print-certs "$APK" > /tmp/local-media-signing.txt
+          grep -F 'Verified using v1 scheme (JAR signing): true' /tmp/local-media-signing.txt
+          grep -F 'Verified using v2 scheme (APK Signature Scheme v2): true' /tmp/local-media-signing.txt
+          "$TOOLS/zipalign" -c -P 16 4 "$APK"
           EXPECTED=$(keytool -list -v -keystore apps/local-media/android/playtest.jks -storepass localmedia-test -alias localmedia-playtest | awk '/SHA256:/{print $2}' | tr -d ':' | tr '[:upper:]' '[:lower:]')
           grep -F "Signer #1 certificate SHA-256 digest: $EXPECTED" /tmp/local-media-signing.txt
           python3 tooling/local-media/inspect-apk.py "$APK"
-          cp "$APK" LocalMedia-0.1.0.apk
+          cp "$APK" LocalMedia-0.1.1.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: LocalMedia-0.1.0
-          path: LocalMedia-0.1.0.apk
+          name: LocalMedia-0.1.1
+          path: LocalMedia-0.1.1.apk
           if-no-files-found: error
       - name: Publish validated playtest release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG=localmedia-v0.1.0
+          TAG=localmedia-v0.1.1
           if gh release view "$TAG" >/dev/null 2>&1; then
             test "$(gh api repos/${{ github.repository }}/git/ref/tags/$TAG --jq .object.sha)" = "$GITHUB_SHA"
-            gh release upload "$TAG" LocalMedia-0.1.0.apk --clobber
+            gh release upload "$TAG" LocalMedia-0.1.1.apk --clobber
           else
-            gh release create "$TAG" LocalMedia-0.1.0.apk --target "$GITHUB_SHA" --prerelease --title 'Local Media 0.1.0 — Android playtest' --notes-file apps/local-media/RELEASE_NOTES.md
+            gh release create "$TAG" LocalMedia-0.1.1.apk --target "$GITHUB_SHA" --prerelease --title 'Local Media 0.1.1 — Android playtest' --notes-file apps/local-media/RELEASE_NOTES.md
           fi
-          gh release view "$TAG" --json assets --jq '.assets[].name' | grep -Fx 'LocalMedia-0.1.0.apk'
+          gh release view "$TAG" --json assets --jq '.assets[].name' | grep -Fx 'LocalMedia-0.1.1.apk'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
