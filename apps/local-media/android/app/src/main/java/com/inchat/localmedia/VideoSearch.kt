@@ -37,7 +37,7 @@ object VideoSearch {
             try {
                 val details = synchronized(EngineSession.lock) {
                     if (!isCurrent(token)) return@execute
-                    YoutubeDL.init(app)
+                    YoutubeDL.init(app); com.yausername.ffmpeg.FFmpeg.init(app)
                     if (!isCurrent(token)) return@execute
                     val request = YoutubeDLRequest(url).addCommands(listOf("--ignore-config", "--no-playlist",
                         "--skip-download", "--dump-single-json", "--socket-timeout", "20", "--retries", "2"))
