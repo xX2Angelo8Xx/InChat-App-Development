@@ -1,6 +1,7 @@
 package com.inchat.localmedia
 
 import android.content.pm.PackageManager
+import android.os.ParcelFileDescriptor
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.*
@@ -14,11 +15,15 @@ import java.security.MessageDigest
 class ReleaseArchiveTest {
     @Suppress("DEPRECATION")
     @Test fun androidCanReadReleaseNameIconAndBothSignatureApis() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
         val release = File(context.cacheDir, "release-archive.apk")
-        val fixture = File("/data/local/tmp/local-media-release.apk")
-        assertTrue("CI must push the built release APK before instrumentation", fixture.isFile)
-        fixture.copyTo(release, overwrite = true)
+        // /data/local/tmp is shell-owned; keep the package parser itself in the app context.
+        val fixture = instrumentation.uiAutomation.executeShellCommand("cat /data/local/tmp/local-media-release.apk")
+        ParcelFileDescriptor.AutoCloseInputStream(fixture).use { input ->
+            release.outputStream().use { output -> input.copyTo(output) }
+        }
+        assertTrue("CI must push the complete release APK before instrumentation", release.length() > 100_000_000)
         try {
             val pm = context.packageManager
             val modern = pm.getPackageArchiveInfo(release.absolutePath, PackageManager.GET_SIGNING_CERTIFICATES)
