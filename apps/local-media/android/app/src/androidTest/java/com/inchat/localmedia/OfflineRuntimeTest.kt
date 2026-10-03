@@ -13,6 +13,32 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class OfflineRuntimeTest {
+    @Test fun interfaceAcceptsSharedLinkWithoutAutomaticDownload() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val intent = android.content.Intent(instrumentation.targetContext, MainActivity::class.java)
+            .setAction(android.content.Intent.ACTION_SEND).putExtra(android.content.Intent.EXTRA_TEXT, "https://youtu.be/BaW_jenozKc")
+            .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        val activity = instrumentation.startActivitySync(intent) as MainActivity
+        instrumentation.waitForIdleSync()
+        fun descendants(view: android.view.View): List<android.view.View> = if (view is android.view.ViewGroup)
+            listOf(view) + (0 until view.childCount).flatMap { descendants(view.getChildAt(it)) } else listOf(view)
+        try {
+            instrumentation.runOnMainSync {
+                val views = descendants(activity.window.decorView)
+                assertEquals("https://youtu.be/BaW_jenozKc", views.filterIsInstance<android.widget.EditText>().single().text.toString())
+                assertFalse(DownloadState.current.busy)
+                val radio = views.filterIsInstance<android.widget.RadioButton>().first { it.text.toString().startsWith("MP4") }
+                radio.performClick()
+                assertEquals(android.view.View.VISIBLE, views.filterIsInstance<android.widget.Spinner>().single().visibility)
+            }
+            instrumentation.waitForIdleSync()
+            val screenshot = instrumentation.uiAutomation.takeScreenshot()
+            assertNotNull(screenshot)
+            File(activity.getExternalFilesDir(null), "ui-preview.png").outputStream().use { screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+            screenshot.recycle()
+        } finally { instrumentation.runOnMainSync { activity.finish() } }
+    }
+
     @Test fun packagedRuntimeCreatesRealMp3AndMp4WithoutNetwork() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         YoutubeDL.init(context); FFmpeg.init(context)

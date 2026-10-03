@@ -39,11 +39,12 @@ class DownloadService : Service() {
         val mp3 = intent?.getBooleanExtra("mp3", true) ?: true
         val quality = intent?.getIntExtra("quality", 720) ?: 720
         wake = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LocalMedia:Download").also { it.acquire(2 * 60 * 60 * 1000L) }
-        executor.execute { download(url, mp3, quality) }
+        executor.execute { download(url, mp3, quality, startId) }
         return START_NOT_STICKY
     }
-    private fun download(input: String, mp3: Boolean, quality: Int) {
+    private fun download(input: String, mp3: Boolean, quality: Int, startId: Int) {
         val directory = File(cacheDir, "download-job")
+        var result = JobState(message = "Download beendet.")
         try {
             val url = DownloadOptions.normalize(input)
             directory.deleteRecursively(); check(directory.mkdirs())
@@ -53,14 +54,16 @@ class DownloadService : Service() {
             checkNotCancelled()
             val request = YoutubeDLRequest(url).addCommands(DownloadOptions.arguments(mp3, quality, directory.absolutePath))
             update("Video wird abgerufen …")
+            var converting = false
             YoutubeDL.execute(request, processId, false) { progress, eta, line ->
                 if (cancelled.get()) YoutubeDL.destroyProcessById(processId)
                 else {
-                    val converting = line.contains("[ExtractAudio]") || line.contains("[Merger]") || line.contains("[VideoRemuxer]")
+                    converting = converting || line.contains("[ExtractAudio]") || line.contains("[Merger]") || line.contains("[VideoRemuxer]")
                     val percent = progress.toInt().coerceIn(0, 100)
                     val message = if (converting) "${if (mp3) "MP3 wird erstellt" else "Video und Audio werden zusammengeführt"} …"
+                        else if (progress < 0) "Videoinformationen werden geladen …"
                         else "Download: $percent %${if (eta > 0) " · ca. $eta s" else ""}"
-                    update(message, if (converting) -1 else percent)
+                    update(message, if (converting || progress < 0) -1 else percent)
                 }
             }
             checkNotCancelled()
@@ -69,17 +72,17 @@ class DownloadService : Service() {
             check(files.size == 1) { "Keine vollständige $extension-Datei erzeugt." }
             update("Datei wird im Download-Ordner gespeichert …")
             val file = MediaFiles.publish(this, files.single())
-            DownloadState.publish(JobState(message = "Gespeichert: ${file.name}"))
+            result = JobState(message = "Gespeichert: ${file.name}")
         } catch (e: Exception) {
-            val state = if (cancelled.get()) JobState(message = "Download abgebrochen.")
+            result = if (cancelled.get()) JobState(message = "Download abgebrochen.")
                 else JobState(message = "Download fehlgeschlagen.", error = e.message.orEmpty().takeLast(5000))
-            DownloadState.publish(state)
         } finally {
             directory.deleteRecursively()
             wake?.let { if (it.isHeld) it.release() }
             active.set(false)
             stopForeground(STOP_FOREGROUND_REMOVE)
-            stopSelf()
+            stopSelf(startId)
+            DownloadState.publish(result)
         }
     }
     private fun checkNotCancelled() { check(!cancelled.get()) { "Abgebrochen" } }

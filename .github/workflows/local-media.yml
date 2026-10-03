@@ -48,7 +48,9 @@ jobs:
           profile: pixel_6
           disable-animations: true
           working-directory: apps/local-media/android
-          script: gradle --no-daemon :app:connectedDebugAndroidTest
+          script: |
+            gradle --no-daemon :app:connectedDebugAndroidTest
+            adb pull '/sdcard/Android/data/com.inchat.localmedia/files/ui-preview.png' ui-preview.png
       - name: Inspect signed APK
         run: |
           set -euo pipefail
@@ -85,6 +87,7 @@ jobs:
         with:
           name: local-media-validation
           path: |
+            apps/local-media/android/ui-preview.png
             apps/local-media/android/app/build/reports/
             apps/local-media/android/app/build/outputs/androidTest-results/
             /tmp/local-media-badging.txt
